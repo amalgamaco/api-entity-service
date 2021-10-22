@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A set of services for handling the communication with a REST API and the creation of the local entities and their relations based on the API responses.",
   "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test JEST_JUNIT_OUTPUT_DIR=reports TZ=UTC jest"
+  },
   "repository": {
     "url": "https://git.amalgama.co/rr-ss/npm-packages/api-entity-service.git"
   },
@@ -13,7 +16,32 @@
   },
   "homepage": "https://git.amalgama.co/rr-ss/npm-packages/api-entity-service",
   "publishConfig": {
-    "@rr-ss:registry":" https://git.amalgama.co/api/v4/projects/913/packages/npm/"
+    "@rr-ss:registry": " https://git.amalgama.co/api/v4/projects/913/packages/npm/"
   },
-  "keywords": ["api", "entity service"]
+  "keywords": [
+    "api",
+    "entity service"
+  ],
+  "devDependencies": {
+    "jest": "^27.3.1",
+    "jest-junit": "^13.0.0"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageDirectory": "<rootDir>/reports/coverage",
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "text-summary",
+      "cobertura"
+    ],
+    "reporters": [
+      "default",
+      "jest-junit"
+    ],
+    "testMatch": [
+      "<rootDir>/tests/**/?(*.)(spec|test).js"
+    ]
+  }
 }
