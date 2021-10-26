@@ -4,6 +4,8 @@
   "description": "A set of services for handling the communication with a REST API and the creation of the local entities and their relations based on the API responses.",
   "main": "index.js",
   "scripts": {
+    "build": "babel src --out-dir dist",
+    "lint": "eslint src/ tests/",
     "test": "NODE_ENV=test JEST_JUNIT_OUTPUT_DIR=reports TZ=UTC jest"
   },
   "repository": {
@@ -23,6 +25,13 @@
     "entity service"
   ],
   "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.8",
+    "@babel/eslint-parser": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "eslint": "^8.1.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.25.2",
     "jest": "^27.3.1",
     "jest-junit": "^13.0.0"
   },
