@@ -6,19 +6,19 @@ export default class JSONApiParser {
 	parse = ( { data, included } ) => ( {
 		data: this.#parseData( data ),
 		included: this.#parseIncluded( included )
-	} )
+	} );
 
 	#parseData = data => (
 		Array.isArray( data )
 			? data.map( this.#parseEntity )
 			: this.#parseEntity( data )
-	)
+	);
 
 	#parseIncluded = included => (
 		included
 			? included.map( this.#parseEntity )
 			: []
-	)
+	);
 
 	#parseEntity = ( {
 		id, type, attributes: baseAttributes, relationships = {}
@@ -50,8 +50,9 @@ export default class JSONApiParser {
 			);
 
 		return { attributes, type };
-	}
+	};
 
+	// eslint-disable-next-line class-methods-use-this
 	#parseRelationships = relationships => Object
 		.keys( relationships )
 		.reduce( ( result, relationshipName ) => {

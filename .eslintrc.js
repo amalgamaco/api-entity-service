@@ -1,0 +1,87 @@
+module.exports = {
+	'env': {
+		'browser': true,
+		'es2021': true,
+		'jest': true
+	},
+	'extends': [
+		'airbnb-base',
+		'plugin:@typescript-eslint/recommended'
+	],
+	'parser': '@typescript-eslint/parser',
+	'plugins': [ '@typescript-eslint' ],
+	'overrides': [
+		{
+			'files': [ 'src/*.ts' ],
+			'excludedFiles': '*.js',
+			'extends': [
+				'plugin:@typescript-eslint/recommended-requiring-type-checking'
+			]
+		}
+	],
+	'parserOptions': {
+		'ecmaVersion': 12,
+		'sourceType': 'module'
+	},
+	'rules': {
+		'no-tabs': 'off',
+		'indent': [
+			'error',
+			'tab'
+		],
+		'comma-dangle': [
+			'error',
+			'never'
+		],
+		'import/prefer-default-export': 'off',
+		'space-in-parens': [
+			'error',
+			'always'
+		],
+		'array-bracket-spacing': [
+			'error',
+			'always'
+		],
+		'no-underscore-dangle': [
+			'error',
+			{
+				'allowAfterThis': true
+			}
+		],
+		'computed-property-spacing': [
+			'error',
+			'always'
+		],
+		'quote-props': [
+			'error',
+			'consistent'
+		],
+		'import/no-dynamic-require': 0,
+		'import/no-extraneous-dependencies': [
+			'error',
+			{
+				'devDependencies': true
+			}
+		],
+		'prefer-const': 'off',
+		'no-param-reassign': 'off',
+		'import/no-named-as-default': 'off',
+		'function-paren-newline': 'off',
+		'no-restricted-imports': [
+			'error',
+			{
+				'patterns': [ '@material-ui/*/*/*', '!@material-ui/core/test-utils/*' ]
+			}
+		],
+		'arrow-parens': [
+			2,
+			'as-needed',
+			{ 'requireForBlockBody': true }
+		],
+		'lines-between-class-members': [
+			'error',
+			'always',
+			{ 'exceptAfterSingleLine': true }
+		]
+	}
+};

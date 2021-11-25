@@ -92,7 +92,7 @@ export default class ApiEntityService {
 				transformRequest: serializeRequestDataForContentType
 			}
 		);
-	}
+	};
 
 	// Paths
 	get createPath() {
@@ -126,5 +126,5 @@ export default class ApiEntityService {
 		parsedResponse
 			? this.creator.create( parsedResponse )
 			: null
-	)
+	);
 }
