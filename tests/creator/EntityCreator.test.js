@@ -1,4 +1,4 @@
-import EntityCreator from '../../src/creator/EntityCreator';
+import EntityCreator from '../../src/creator/EntityCreator.ts';
 
 const createDataItem = ( {
 	type = 'user',
