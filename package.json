@@ -42,6 +42,7 @@
       "json",
       "lcov",
       "text",
+      "html",
       "text-summary",
       "cobertura"
     ],
