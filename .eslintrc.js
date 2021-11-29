@@ -10,20 +10,44 @@ module.exports = {
 	],
 	'parser': '@typescript-eslint/parser',
 	'plugins': [ '@typescript-eslint' ],
+	'parserOptions': {
+		'ecmaVersion': 12,
+		'sourceType': 'module'
+	},
+	'settings': {
+		'import/parsers': {
+			'@typescript-eslint/parser': [ '.ts', '.tsx' ]
+		},
+		'import/resolver': {
+			'typescript': {
+				'alwaysTryTypes': true,
+				'project': './tsconfig.json'
+			}
+		}
+	},
 	'overrides': [
 		{
 			'files': [ 'src/*.ts' ],
+			'parserOptions': {
+				'project': './tsconfig.json'
+			},
 			'excludedFiles': '*.js',
 			'extends': [
 				'plugin:@typescript-eslint/recommended-requiring-type-checking'
 			]
 		}
 	],
-	'parserOptions': {
-		'ecmaVersion': 12,
-		'sourceType': 'module'
-	},
 	'rules': {
+		'import/extensions': [
+			'error',
+			'ignorePackages',
+			{
+				'js': 'never',
+				'jsx': 'never',
+				'ts': 'never',
+				'tsx': 'never'
+			}
+		],
 		'no-tabs': 'off',
 		'indent': [
 			'error',
