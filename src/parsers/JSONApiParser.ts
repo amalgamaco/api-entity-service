@@ -51,10 +51,12 @@ export default class JSONApiParser implements IResponseParser {
 		this.mappers = mappers;
 	}
 
-	parse = ( { data, included }: ParseParameters ): ParsedResponse => ( {
-		data: this.parseData( data ),
-		included: this.parseIncluded( included )
-	} );
+	parse( { data, included }: ParseParameters ): ParsedResponse {
+		return ( {
+			data: this.parseData( data ),
+			included: this.parseIncluded( included )
+		} );
+	}
 
 	private parseData( data: JSONApiData ):
 		( ParsedEntity | ParsedEntity[] ) {
