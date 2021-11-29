@@ -6,7 +6,6 @@ import {
 interface AttributesMapper {
 	[ key: string ]: string;
 }
-
 interface AttributesMappers {
 	[ key: string ]: AttributesMapper
 }

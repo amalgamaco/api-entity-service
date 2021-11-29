@@ -2,7 +2,7 @@ import {
 	addIncludeToURL,
 	headersForRequest,
 	serializeRequestDataForContentType
-} from '../../src/helpers/requests';
+} from '../../../src/service/helpers/requests';
 
 describe( 'headersForRequest', () => {
 	describe( 'when the request includes files', () => {

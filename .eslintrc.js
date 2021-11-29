@@ -37,7 +37,10 @@ module.exports = {
 			]
 		}
 	],
+	'ignorePatterns': [ 'dist/**/*' ],
 	'rules': {
+		'no-shadow': 'off',
+		'@typescript-eslint/no-shadow': [ 'error' ],
 		'import/extensions': [
 			'error',
 			'ignorePackages',
