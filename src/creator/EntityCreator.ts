@@ -1,8 +1,6 @@
-type EntityType = string;
-interface EntityAttributes {
-	id: number;
-	[ key: string ]: unknown;
-}
+import {
+	EntityType, EntityAttributes, ParsedEntity, IEntityCreator
+} from '../types';
 
 interface EntityStore<T> {
 	create( attributes: EntityAttributes ): T;
@@ -12,28 +10,23 @@ interface RootStore {
 	getStore<T>( type: string ): EntityStore<T>;
 }
 
-interface EntityCreationParameters {
-	type: EntityType;
-	attributes: EntityAttributes;
-}
-
 interface InitParameters {
 	rootStore: RootStore;
 }
 
 interface CreateParameters {
-	data: EntityCreationParameters | EntityCreationParameters[];
-	included?: EntityCreationParameters[];
+	data: ParsedEntity | ParsedEntity[];
+	included?: ParsedEntity[];
 }
 
-export default class EntityCreator {
+export default class EntityCreator implements IEntityCreator {
 	private rootStore: RootStore;
 
 	constructor( { rootStore }: InitParameters ) {
 		this.rootStore = rootStore;
 	}
 
-	create<T>( { data, included = [] }: CreateParameters ) : ( T | null | T[] ) {
+	create<T>( { data, included = [] }: CreateParameters ): ( T | null | T[] ) {
 		included.forEach( this.createEntity.bind( this ) );
 
 		return Array.isArray( data )
@@ -41,13 +34,13 @@ export default class EntityCreator {
 			: this.createEntity( data );
 	}
 
-	private createEntities<T>( data: EntityCreationParameters[] ): T[] {
+	private createEntities<T>( data: ParsedEntity[] ): T[] {
 		return data
 			.map( item => this.createEntity( item ) )
 			.filter( ( item ): item is T => !!item );
 	}
 
-	private createEntity<T>( { type, attributes }: EntityCreationParameters ): T | null {
+	private createEntity<T>( { type, attributes }: ParsedEntity ): T | null {
 		const store: EntityStore<T> = this.storeForType( type );
 		if ( !store ) { return null; }
 
