@@ -62,9 +62,9 @@ describe( 'EntityCreator', () => {
 		};
 	};
 
-	describe( 'create', () => {
+	describe( '@create', () => {
 		const testCreatesTheIncludedCorrectly = ( { parsedResponse } ) => {
-			test( 'gets the correct stores for the types in data and included from the root store', () => {
+			it( 'gets the correct stores for the types in data and included from the root store', () => {
 				const { rootStore, entityCreator } = createEntityCreator();
 
 				entityCreator.create( parsedResponse );
@@ -73,7 +73,7 @@ describe( 'EntityCreator', () => {
 				expect( rootStore.getStore ).toHaveBeenCalledWith( 'state' );
 			} );
 
-			test( 'calls the create method with the given attributes in the correct store for the included ', () => {
+			it( 'calls the create method with the given attributes in the correct store for the included ', () => {
 				const { citiesStore, statesStore, entityCreator } = createEntityCreator();
 				entityCreator.create( parsedResponse );
 
@@ -90,7 +90,7 @@ describe( 'EntityCreator', () => {
 			const data = createDataItem();
 			const parsedResponse = { data };
 
-			test( 'gets the correct store for the type of data', () => {
+			it( 'gets the correct store for the type of data', () => {
 				const { rootStore, entityCreator } = createEntityCreator();
 
 				entityCreator.create( parsedResponse );
@@ -98,14 +98,14 @@ describe( 'EntityCreator', () => {
 				expect( rootStore.getStore ).toHaveBeenCalledWith( 'user' );
 			} );
 
-			test( 'calls the create method with the given attributes in the correct store ', () => {
+			it( 'calls the create method with the given attributes in the correct store ', () => {
 				const { usersStore, entityCreator } = createEntityCreator();
 				entityCreator.create( parsedResponse );
 
 				expect( usersStore.create ).toHaveBeenCalledWith( parsedResponse.data.attributes );
 			} );
 
-			test( 'returns the created entity', () => {
+			it( 'returns the created entity', () => {
 				const { usersStore, entityCreator } = createEntityCreator();
 				const result = entityCreator.create( parsedResponse );
 
@@ -138,7 +138,7 @@ describe( 'EntityCreator', () => {
 
 			const parsedResponse = { data };
 
-			test( 'gets the correct store for the type of data', () => {
+			it( 'gets the correct store for the type of data', () => {
 				const { rootStore, entityCreator } = createEntityCreator();
 
 				entityCreator.create( parsedResponse );
@@ -146,7 +146,7 @@ describe( 'EntityCreator', () => {
 				expect( rootStore.getStore ).toHaveBeenCalledWith( 'user' );
 			} );
 
-			test( 'calls the create method with the given attributes in the correct store for each of the items ', () => {
+			it( 'calls the create method with the given attributes in the correct store for each of the items ', () => {
 				const { usersStore, entityCreator } = createEntityCreator();
 				entityCreator.create( parsedResponse );
 
@@ -155,7 +155,7 @@ describe( 'EntityCreator', () => {
 				expect( usersStore.create ).toHaveBeenCalledWith( parsedResponse.data[ 2 ].attributes );
 			} );
 
-			test( 'returns the created entities', () => {
+			it( 'returns the created entities', () => {
 				const { usersStore, entityCreator } = createEntityCreator();
 				const result = entityCreator.create( parsedResponse );
 
@@ -176,7 +176,7 @@ describe( 'EntityCreator', () => {
 				data: createDataItem( { type: 'non-exist' } )
 			};
 
-			test( 'returns null', () => {
+			it( 'returns null', () => {
 				const { entityCreator } = createEntityCreator();
 				const result = entityCreator.create( parsedResponse );
 

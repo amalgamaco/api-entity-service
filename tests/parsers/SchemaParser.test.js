@@ -75,14 +75,14 @@ describe( 'SchemaParser', () => {
 			]
 		};
 
-		test( 'sets the correct type', () => {
+		it( 'sets the correct type', () => {
 			const response = { response: userResponse };
 			const result = parser.parse( response );
 
 			expect( result.data.type ).toEqual( 'user' );
 		} );
 
-		test( 'maps the attributes correctly', () => {
+		it( 'maps the attributes correctly', () => {
 			const response = { response: userResponse };
 			const result = parser.parse( response );
 
@@ -93,14 +93,14 @@ describe( 'SchemaParser', () => {
 		} );
 
 		describe( 'with relations', () => {
-			test( 'replaces the nested relations with the ids', () => {
+			it( 'replaces the nested relations with the ids', () => {
 				const response = { response: userResponse };
 				const { data } = parser.parse( response );
 
 				expect( data.attributes.stateId ).toEqual( userResponse.state.id );
 			} );
 
-			test( 'adds the related item to the included list', () => {
+			it( 'adds the related item to the included list', () => {
 				const response = { response: userResponse };
 				const { included } = parser.parse( response );
 
@@ -110,7 +110,7 @@ describe( 'SchemaParser', () => {
 			} );
 
 			describe( 'and one relation with a nested relation', () => {
-				test( 'replaces the nested relations with the ids in the related data', () => {
+				it( 'replaces the nested relations with the ids in the related data', () => {
 					const response = { response: userResponse };
 					const { included } = parser.parse( response );
 
@@ -119,7 +119,7 @@ describe( 'SchemaParser', () => {
 					expect( city.attributes.stateId ).toEqual( userResponse.city.state.id );
 				} );
 
-				test( 'adds the related item of the related item to the included list', () => {
+				it( 'adds the related item of the related item to the included list', () => {
 					const response = { response: userResponse };
 					const { included } = parser.parse( response );
 
@@ -130,7 +130,7 @@ describe( 'SchemaParser', () => {
 			} );
 
 			describe( 'and one is a list relation', () => {
-				test( 'replaces the nested relations with a list of ids in the related data', () => {
+				it( 'replaces the nested relations with a list of ids in the related data', () => {
 					const response = { response: userResponse };
 					const { data } = parser.parse( response );
 
@@ -139,7 +139,7 @@ describe( 'SchemaParser', () => {
 					);
 				} );
 
-				test( 'adds the related items to the included list', () => {
+				it( 'adds the related items to the included list', () => {
 					const response = { response: userResponse };
 					const { included } = parser.parse( response );
 
@@ -154,7 +154,7 @@ describe( 'SchemaParser', () => {
 		} );
 	} );
 
-	describe( 'for a response with a multiple items', () => {
+	describe( 'for a response with multiple items', () => {
 		const usersResponse = [
 			{
 				id: '1',
@@ -214,7 +214,7 @@ describe( 'SchemaParser', () => {
 			}
 		];
 
-		test( 'sets the correct type for all the items', () => {
+		it( 'sets the correct type for all the items', () => {
 			const response = { response: usersResponse };
 			const result = parser.parse( response );
 
@@ -222,7 +222,7 @@ describe( 'SchemaParser', () => {
 			expect( result.data[ 1 ].type ).toEqual( 'user' );
 		} );
 
-		test( 'maps the attributes correctly for all the items', () => {
+		it( 'maps the attributes correctly for all the items', () => {
 			const response = { response: usersResponse };
 			const result = parser.parse( response );
 
@@ -238,7 +238,7 @@ describe( 'SchemaParser', () => {
 		} );
 
 		describe( 'with relations', () => {
-			test( 'replaces the nested relations with the ids', () => {
+			it( 'replaces the nested relations with the ids', () => {
 				const response = { response: usersResponse };
 				const { data } = parser.parse( response );
 
@@ -246,7 +246,7 @@ describe( 'SchemaParser', () => {
 				expect( data[ 1 ].attributes.stateId ).toEqual( usersResponse[ 1 ].state.id );
 			} );
 
-			test( 'adds the related item to the included list', () => {
+			it( 'adds the related item to the included list', () => {
 				const response = { response: usersResponse };
 				const { included } = parser.parse( response );
 
@@ -259,7 +259,7 @@ describe( 'SchemaParser', () => {
 			} );
 
 			describe( 'and one relation with a nested relation', () => {
-				test( 'replaces the nested relations with the ids in the related data', () => {
+				it( 'replaces the nested relations with the ids in the related data', () => {
 					const response = { response: usersResponse };
 					const { included } = parser.parse( response );
 
@@ -269,7 +269,7 @@ describe( 'SchemaParser', () => {
 					expect( cities[ 1 ].attributes.stateId ).toEqual( usersResponse[ 1 ].city.state.id );
 				} );
 
-				test( 'adds the related item of the related item to the included list', () => {
+				it( 'adds the related item of the related item to the included list', () => {
 					const response = { response: usersResponse };
 					const { included } = parser.parse( response );
 
@@ -281,19 +281,18 @@ describe( 'SchemaParser', () => {
 					);
 				} );
 
-				test( 'dont\'t have repeated items in the included', () => {
+				it( 'doesn\'t have repeated items in the included', () => {
 					const response = { response: usersResponse };
 					const { included } = parser.parse( response );
 
 					expect(
-						// eslint-disable-next-line eqeqeq
 						included.filter( matchesTypeAndId( 'state', usersResponse[ 0 ].state.id ) ).length
 					).toEqual( 1 );
 				} );
 			} );
 
 			describe( 'and one is a list relation', () => {
-				test( 'replaces the nested relations with a list of ids in the related data', () => {
+				it( 'replaces the nested relations with a list of ids in the related data', () => {
 					const response = { response: usersResponse };
 					const { data } = parser.parse( response );
 
@@ -305,7 +304,7 @@ describe( 'SchemaParser', () => {
 					);
 				} );
 
-				test( 'adds the related items to the included list', () => {
+				it( 'adds the related items to the included list', () => {
 					const response = { response: usersResponse };
 					const { included } = parser.parse( response );
 

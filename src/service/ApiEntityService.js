@@ -59,7 +59,7 @@ export default class ApiEntityService {
 	}
 
 	request( {
-		method, url, attributes, config: { includesFiles = false, include = [] } = {}
+		method = 'get', url, attributes, config: { includesFiles = false, include = [] } = {}
 	} ) {
 		return this
 			.#makeRequest( {
@@ -71,7 +71,7 @@ export default class ApiEntityService {
 	}
 
 	#makeRequest = ( {
-		method = 'get',
+		method,
 		url,
 		attributes = null,
 		include = [],

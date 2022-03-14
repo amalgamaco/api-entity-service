@@ -50,6 +50,9 @@
       "default",
       "jest-junit"
     ],
+    "setupFiles": [
+      "<rootDir>/config/setupTests.js"
+    ],
     "testMatch": [
       "<rootDir>/tests/**/?(*.)(spec|test).js"
     ]
