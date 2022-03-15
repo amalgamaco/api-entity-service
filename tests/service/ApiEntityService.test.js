@@ -1,4 +1,5 @@
 import ApiEntityService from '../../src/service/ApiEntityService';
+import ApiMock from '../__mocks__/ApiMock';
 
 const userResponse = {
 	data: {
@@ -44,12 +45,7 @@ const userResponse = {
 
 const nullResponse = { data: null };
 
-const apiMock = {
-	post: jest.fn( () => Promise.resolve() ),
-	patch: jest.fn( () => Promise.resolve() ),
-	get: jest.fn( () => Promise.resolve() ),
-	delete: jest.fn( () => Promise.resolve() )
-};
+const apiMock = new ApiMock();
 
 const parsedResponse = {
 	data: {
@@ -103,16 +99,7 @@ describe( 'ApiEntityService', () => {
 		paths
 	} );
 
-	beforeEach( () => {
-		apiMock.post.mockClear();
-		apiMock.patch.mockClear();
-		apiMock.get.mockClear();
-		apiMock.delete.mockClear();
-
-		parserMock.parse.mockClear();
-
-		creatorMock.create.mockClear();
-	} );
+	beforeEach( () => jest.clearAllMocks() );
 
 	const testMethodCallsTheCorrectApiMethodAndHandlesTheResponse = ( {
 		serviceMethod,
@@ -140,8 +127,10 @@ describe( 'ApiEntityService', () => {
 			);
 		} );
 
+		beforeEach( () => apiMock[ expectedApiMethod ].mockResolvedValueOnce( response ) );
+
 		if ( attributes ) {
-			test( 'calls the correct api method with the correct path, attributes and config', () => {
+			it( 'calls the correct api method with the correct path, attributes and config', () => {
 				const service = createService();
 				callService( service );
 
@@ -155,8 +144,8 @@ describe( 'ApiEntityService', () => {
 				);
 			} );
 
-			describe( 'with the includesFiles flag in true', () => {
-				test( 'changes the content type header to multipart/form-data', () => {
+			describe( 'when the includesFiles flag is true', () => {
+				it( 'changes the content type header to multipart/form-data', () => {
 					const service = createService();
 					callService( service, { includesFiles: true } );
 
@@ -169,7 +158,7 @@ describe( 'ApiEntityService', () => {
 				} );
 			} );
 		} else {
-			test( 'calls the correct api method with the correct path', () => {
+			it( 'calls the correct api method with the correct path', () => {
 				const service = createService();
 				callService( service );
 
@@ -178,7 +167,7 @@ describe( 'ApiEntityService', () => {
 		}
 
 		describe( 'with the include parameter', () => {
-			test( 'calls the correct api method with the correct path apending the include parameter', () => {
+			it( 'calls the correct api method with the correct path appending the include parameter', () => {
 				const service = createService();
 				const include = [ 'city', 'state' ];
 
@@ -191,42 +180,42 @@ describe( 'ApiEntityService', () => {
 		} );
 
 		if ( hasResponse ) {
-			test( 'calls the parser with the received response', async () => {
+			it( 'calls the parser with the received response', async () => {
 				const service = createService();
 				await callService( service );
 
 				expect( parserMock.parse ).toHaveBeenCalledWith( userResponse.data );
 			} );
 
-			test( 'calls the creator with the parsed response', async () => {
+			it( 'calls the creator with the parsed response', async () => {
 				const service = createService();
 				await callService( service );
 
 				expect( creatorMock.create ).toHaveBeenCalledWith( parsedResponse );
 			} );
 
-			test( 'returns the created entity/entities', async () => {
+			it( 'returns the created entity/entities', async () => {
 				const service = createService();
 				const result = await callService( service );
 
 				expect( result ).toEqual( mockedCreatedEntities );
 			} );
 		} else {
-			test( 'does not call the parser', async () => {
+			it( 'does not call the parser', async () => {
 				const service = createService();
 				await callService( service );
 
 				expect( parserMock.parse ).not.toHaveBeenCalled();
 			} );
 
-			test( 'does not call the creator', async () => {
+			it( 'does not call the creator', async () => {
 				const service = createService();
 				await callService( service );
 
 				expect( creatorMock.create ).not.toHaveBeenCalled();
 			} );
 
-			test( 'returns null', async () => {
+			it( 'returns null', async () => {
 				const service = createService();
 				const result = await callService( service );
 
@@ -235,7 +224,7 @@ describe( 'ApiEntityService', () => {
 		}
 	};
 
-	describe( 'create', () => {
+	describe( '@create', () => {
 		const attributes = {
 			first_name: 'John',
 			last_name: 'Doe',
@@ -253,7 +242,7 @@ describe( 'ApiEntityService', () => {
 		} );
 	} );
 
-	describe( 'update', () => {
+	describe( '@update', () => {
 		const id = 3;
 		const attributes = {
 			first_name: 'John',
@@ -273,7 +262,7 @@ describe( 'ApiEntityService', () => {
 		} );
 	} );
 
-	describe( 'fetch', () => {
+	describe( '@fetch', () => {
 		const id = 3;
 
 		testMethodCallsTheCorrectApiMethodAndHandlesTheResponse( {
@@ -285,7 +274,7 @@ describe( 'ApiEntityService', () => {
 		} );
 	} );
 
-	describe( 'fetchAll', () => {
+	describe( '@fetchAll', () => {
 		testMethodCallsTheCorrectApiMethodAndHandlesTheResponse( {
 			serviceMethod: 'fetchAll',
 			expectedApiMethod: 'get',
@@ -294,7 +283,7 @@ describe( 'ApiEntityService', () => {
 		} );
 	} );
 
-	describe( 'delete', () => {
+	describe( '@delete', () => {
 		const id = 3;
 
 		testMethodCallsTheCorrectApiMethodAndHandlesTheResponse( {

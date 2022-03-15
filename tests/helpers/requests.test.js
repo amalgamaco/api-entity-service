@@ -4,15 +4,9 @@ import {
 	serializeRequestDataForContentType
 } from '../../src/helpers/requests';
 
-global.FormData = class {
-	constructor() {
-		this.append = jest.fn();
-	}
-};
-
 describe( 'headersForRequest', () => {
 	describe( 'when the request includes files', () => {
-		test( 'returns the multipar/form-data content-type header', () => {
+		it( 'returns the multipar/form-data content-type header', () => {
 			expect( headersForRequest( { includesFiles: true } ) ).toEqual(
 				{ 'Content-Type': 'multipart/form-data' }
 			);
@@ -20,7 +14,7 @@ describe( 'headersForRequest', () => {
 	} );
 
 	describe( 'when the request does not include files', () => {
-		test( 'returns the application/json content-type header', () => {
+		it( 'returns the application/json content-type header', () => {
 			expect( headersForRequest( { includesFiles: false } ) ).toEqual(
 				{ 'Content-Type': 'application/json' }
 			);
@@ -29,7 +23,7 @@ describe( 'headersForRequest', () => {
 } );
 
 describe( 'addIncludeToURL', () => {
-	test( 'appends the include items to the url as the query parameter include', () => {
+	it( 'appends the include items to the url as the query parameter include', () => {
 		expect( addIncludeToURL( { url: '1/users/3', include: [ 'city', 'state' ] } ) ).toEqual(
 			'1/users/3?include=city,state'
 		);
@@ -46,7 +40,7 @@ describe( 'serializeRequestDataForContentType', () => {
 	};
 
 	describe( 'when the request has content type application/json', () => {
-		test( 'serialize the data as json', () => {
+		it( 'serializes the data as json', () => {
 			const result = serializeRequestDataForContentType(
 				data,
 				{ 'Content-Type': 'application/json' }
@@ -57,7 +51,7 @@ describe( 'serializeRequestDataForContentType', () => {
 	} );
 
 	describe( 'when the request has content type multipart/form-data', () => {
-		test( 'serialize the data as form data correctly', () => {
+		it( 'serializes the data as form data correctly', () => {
 			const result = serializeRequestDataForContentType(
 				data,
 				{ 'Content-Type': 'multipart/form-data' }

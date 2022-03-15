@@ -79,7 +79,7 @@ describe( 'JSONApiParser', () => {
 			state: stateMapper
 		};
 
-		test( 'assigns the correct types for the included', () => {
+		it( 'assigns the correct types for the included', () => {
 			const parser = createParser( { mappers } );
 			const parsed = parser.parse( response );
 
@@ -87,7 +87,7 @@ describe( 'JSONApiParser', () => {
 			expect( parsed.included[ 1 ].type ).toEqual( included[ 1 ].type );
 		} );
 
-		test( 'parses the attributes for the included correctly', () => {
+		it( 'parses the attributes for the included correctly', () => {
 			const parser = createParser( { mappers } );
 			const parsed = parser.parse( response );
 
@@ -99,7 +99,7 @@ describe( 'JSONApiParser', () => {
 			).toEqual( included[ 1 ].attributes.name );
 		} );
 
-		test( 'parses the relationships for the included correctly', () => {
+		it( 'parses the relationships for the included correctly', () => {
 			const parser = createParser( { mappers } );
 			const parsed = parser.parse( response );
 
@@ -118,21 +118,21 @@ describe( 'JSONApiParser', () => {
 		const response = { data };
 
 		describe( 'when there is a mapper for the type', () => {
-			test( 'parses the id as int', () => {
+			it( 'parses the id as int', () => {
 				const parser = createParser( { mappers: { user: userMapper } } );
 				const parsed = parser.parse( response );
 
 				expect( parsed.data.attributes.id ).toEqual( parseInt( id, 10 ) );
 			} );
 
-			test( 'assigns the correct type', () => {
+			it( 'assigns the correct type', () => {
 				const parser = createParser( { mappers: { user: userMapper } } );
 				const parsed = parser.parse( response );
 
 				expect( parsed.data.type ).toEqual( type );
 			} );
 
-			test( 'maps the attributes correctly', () => {
+			it( 'maps the attributes correctly', () => {
 				const parser = createParser( { mappers: { user: userMapper } } );
 				const parsed = parser.parse( response );
 
@@ -142,7 +142,7 @@ describe( 'JSONApiParser', () => {
 			} );
 
 			describe( 'with relationships', () => {
-				test( 'maps the relationships correctly', () => {
+				it( 'maps the relationships correctly', () => {
 					const parser = createParser( { mappers: { user: userMapper } } );
 					const parsed = parser.parse( response );
 
@@ -178,7 +178,7 @@ describe( 'JSONApiParser', () => {
 		const response = { data };
 
 		describe( 'when there is a mapper for the type', () => {
-			test( 'parses the ids as int', () => {
+			it( 'parses the ids as int', () => {
 				const parser = createParser( { mappers: { user: userMapper } } );
 				const parsed = parser.parse( response );
 
@@ -187,7 +187,7 @@ describe( 'JSONApiParser', () => {
 				expect( parsed.data[ 2 ].attributes.id ).toEqual( parseInt( data[ 2 ].id, 10 ) );
 			} );
 
-			test( 'assigns the correct types', () => {
+			it( 'assigns the correct types', () => {
 				const parser = createParser( { mappers: { user: userMapper } } );
 				const parsed = parser.parse( response );
 
@@ -196,7 +196,7 @@ describe( 'JSONApiParser', () => {
 				expect( parsed.data[ 2 ].type ).toEqual( data[ 2 ].type );
 			} );
 
-			test( 'maps the attributes correctly', () => {
+			it( 'maps the attributes correctly', () => {
 				const parser = createParser( { mappers: { user: userMapper } } );
 				const parsed = parser.parse( response );
 
@@ -214,7 +214,7 @@ describe( 'JSONApiParser', () => {
 			} );
 
 			describe( 'with relationships', () => {
-				test( 'maps the relationships correctly', () => {
+				it( 'maps the relationships correctly', () => {
 					const parser = createParser( { mappers: { user: userMapper } } );
 					const parsed = parser.parse( response );
 
