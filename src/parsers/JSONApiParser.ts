@@ -3,45 +3,10 @@ import {
 	IResponseParser, ParsedResponse
 } from '../types';
 
-interface AttributesMapper {
-	[ key: string ]: string;
-}
-interface AttributesMappers {
-	[ key: string ]: AttributesMapper
-}
-
-interface InitParameters {
-	mappers: AttributesMappers;
-}
-
-interface JSONApiAttributes {
-	[ key: string ]: unknown;
-}
-
-interface JSONApiRelationshipData {
-	id: string;
-	type: string;
-}
-
-interface JSONApiRelationship {
-	data: JSONApiRelationshipData;
-}
-
-interface JSONApiRelationships {
-	[ key: string ]: JSONApiRelationship;
-}
-
-interface JSONApiData {
-	id: string;
-	type: string;
-	attributes: JSONApiAttributes;
-	relationships: JSONApiRelationships;
-}
-
-interface ParseParameters {
-	data: JSONApiData;
-	included: JSONApiData[]
-}
+import {
+	InitParameters, ParseParameters,
+	AttributesMappers, JSONApiData, JSONApiRelationships
+} from './JSONApiParser.types';
 
 export default class JSONApiParser implements IResponseParser {
 	private mappers: AttributesMappers;

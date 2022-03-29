@@ -1,47 +1,16 @@
 import { IEntityCreator, IResponseParser, ParsedResponse } from '../types';
-import { Api, Attributes, HTTPMethod } from './helpers/types';
-
 import {
-	addIncludeToURL, headersForRequest, serializeRequestDataForContentType
+	IApi, Attributes, HTTPMethod, InitParameters,
+	RequestWithBodyConfig, RequestCofig, RequestParameters,
+	MakeRequestParameters, EntityID
+} from './ApiEntityService.types';
+import {
+	addIncludeToURL, headersForRequest, serializeRequestDataForContentType,
+	requestHasBody
 } from './helpers/requests';
 
-interface InitParameters {
-	api: Api,
-	basePath: string,
-	parser: IResponseParser,
-	creator: IEntityCreator,
-	paths: { [ key: string ]: string }
-}
-
-type RequestCofig = {
-	include?: string[]
-}
-
-type RequestWithBodyConfig = RequestCofig & {
-	includesFiles?: boolean
-}
-
-type RequestParameters = {
-	method: HTTPMethod,
-	url: string,
-	attributes?: Attributes,
-	config: RequestWithBodyConfig
-}
-
-type MakeRequestParameters = {
-	method: HTTPMethod,
-	url: string,
-	attributes?: Attributes,
-	include?: string[],
-	includesFiles?: boolean
-}
-
-const requestHasBody = ( method: HTTPMethod ): boolean => (
-	method === HTTPMethod.POST || method === HTTPMethod.PATCH || method === HTTPMethod.PUT
-);
-
 export default class ApiEntityService<T> {
-	readonly api: Api;
+	readonly api: IApi;
 	readonly basePath: string;
 	readonly parser: IResponseParser;
 	readonly creator: IEntityCreator;
@@ -70,7 +39,7 @@ export default class ApiEntityService<T> {
 	}
 
 	update(
-		id: number,
+		id: EntityID,
 		attributes: Attributes,
 		{ includesFiles, include }: RequestWithBodyConfig = {}
 	): Promise<T | null> {
@@ -82,7 +51,7 @@ export default class ApiEntityService<T> {
 		} ) as Promise<T | null>;
 	}
 
-	fetch( id: number, { include }: RequestCofig = {} ): Promise<T> {
+	fetch( id: EntityID, { include }: RequestCofig = {} ): Promise<T> {
 		return this.request( {
 			method: HTTPMethod.GET,
 			url: this.defaultResourcePathForId( id ),
@@ -98,7 +67,7 @@ export default class ApiEntityService<T> {
 		} ) as Promise<T[]>;
 	}
 
-	delete( id: number, { include }: RequestCofig = {} ): Promise<null> {
+	delete( id: EntityID, { include }: RequestCofig = {} ): Promise<null> {
 		return this.request( {
 			method: HTTPMethod.DELETE,
 			url: `${this.deletePath( id )}`,
@@ -156,15 +125,15 @@ export default class ApiEntityService<T> {
 		return this.paths.list || this.basePath;
 	}
 
-	private updatePath( id: number ): string {
+	private updatePath( id: EntityID ): string {
 		return this.paths.update || this.defaultResourcePathForId( id );
 	}
 
-	private deletePath( id: number ): string {
+	private deletePath( id: EntityID ): string {
 		return this.paths.delete || this.defaultResourcePathForId( id );
 	}
 
-	private defaultResourcePathForId( id: number ): string {
+	private defaultResourcePathForId( id: EntityID ): string {
 		return (
 			id ? `${this.basePath}/${id}` : this.basePath
 		);

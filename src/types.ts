@@ -20,5 +20,5 @@ export interface IResponseParser {
 }
 
 export interface IEntityCreator {
-	create<T>( parsedResponse: ParsedResponse ): ( T | null | T[] )
+	create<T>( parsedResponse: ParsedResponse ): ( null | T | T[] )
 }

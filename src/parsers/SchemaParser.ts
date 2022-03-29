@@ -2,35 +2,13 @@ import {
 	IResponseParser, EntityAttributes, ParsedEntity, ParsedResponse
 } from '../types';
 import ParsedEntitySet from './helpers/ParsedEntitySet';
-
 import SchemaEntity from './helpers/SchemaEntity';
+import {
+	InitParameters, JSONData, ParsedItem, ParsedItems,
+	ParsedRelations
+} from './SchemaParser.types';
 
 export { SchemaEntity };
-
-type EntitySerialization = { id: string, [ key: string ]: unknown };
-type JSONData = EntitySerialization | (
-	{ [ key: string ]: EntitySerialization | EntitySerialization[] | JSONData }
-);
-
-interface InitParameters {
-	schema: SchemaEntity,
-	dataKey: string
-}
-
-interface ParsedItem {
-	data: ParsedEntity,
-	included: ParsedEntitySet
-}
-
-interface ParsedItems {
-	data: ParsedEntity[],
-	included: ParsedEntitySet
-}
-
-interface ParsedRelations {
-	related: { [ key: string ]: number | number[] },
-	included: ParsedEntitySet
-}
 
 export default class SchemaParser implements IResponseParser {
 	schema: SchemaEntity;

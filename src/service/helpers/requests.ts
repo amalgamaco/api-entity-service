@@ -1,4 +1,4 @@
-import { Attributes, Headers } from './types';
+import { Attributes, Headers, HTTPMethod } from '../ApiEntityService.types';
 
 export const serializeObjectAsFormData = ( properties: Attributes ): FormData => Object
 	.keys( properties )
@@ -12,6 +12,7 @@ export const serializeObjectAsFormData = ( properties: Attributes ): FormData =>
 					item => result.append( `${property}[]`, item )
 				);
 			} else {
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				result.append( property, value as any );
 			}
 
@@ -46,4 +47,8 @@ export const addIncludeToURL = (
 	include.length > 0
 		? `${url}?include=${include.join( ',' )}`
 		: url
+);
+
+export const requestHasBody = ( method: HTTPMethod ): boolean => (
+	method === HTTPMethod.POST || method === HTTPMethod.PATCH || method === HTTPMethod.PUT
 );

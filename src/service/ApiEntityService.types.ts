@@ -1,3 +1,5 @@
+import { IEntityCreator, IResponseParser } from '../types';
+
 export type Attributes = {
 	[ key: string ]: unknown
 }
@@ -23,7 +25,7 @@ export interface ApiMethodWithBody {
 	): ApiResponse
 }
 
-export interface Api {
+export interface IApi {
 	get: ApiMethodWithoutBody,
 	post: ApiMethodWithBody,
 	patch: ApiMethodWithBody,
@@ -38,3 +40,36 @@ export enum HTTPMethod {
 	GET = 'get',
 	DELETE = 'delete'
 }
+
+export interface InitParameters {
+	api: IApi,
+	basePath: string,
+	parser: IResponseParser,
+	creator: IEntityCreator,
+	paths: { [ key: string ]: string }
+}
+
+export type RequestCofig = {
+	include?: string[]
+}
+
+export type RequestWithBodyConfig = RequestCofig & {
+	includesFiles?: boolean
+}
+
+export type RequestParameters = {
+	method: HTTPMethod,
+	url: string,
+	attributes?: Attributes,
+	config: RequestWithBodyConfig
+}
+
+export type MakeRequestParameters = {
+	method: HTTPMethod,
+	url: string,
+	attributes?: Attributes,
+	include?: string[],
+	includesFiles?: boolean
+}
+
+export type EntityID = number | string;

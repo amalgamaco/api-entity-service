@@ -1,26 +1,13 @@
 import {
-	EntityType, EntityAttributes, ParsedEntity, IEntityCreator
+	EntityType, ParsedEntity, IEntityCreator
 } from '../types';
-
-interface EntityStore<T> {
-	create( attributes: EntityAttributes ): T;
-}
-
-interface RootStore {
-	getStore<T>( type: string ): EntityStore<T>;
-}
-
-interface InitParameters {
-	rootStore: RootStore;
-}
-
-interface CreateParameters {
-	data: ParsedEntity | ParsedEntity[];
-	included?: ParsedEntity[];
-}
+import {
+	InitParameters, CreateParameters,
+	IRootStore, IEntityStore
+} from './EntityCreator.types';
 
 export default class EntityCreator implements IEntityCreator {
-	private rootStore: RootStore;
+	private rootStore: IRootStore;
 
 	constructor( { rootStore }: InitParameters ) {
 		this.rootStore = rootStore;
@@ -41,13 +28,13 @@ export default class EntityCreator implements IEntityCreator {
 	}
 
 	private createEntity<T>( { type, attributes }: ParsedEntity ): T | null {
-		const store: EntityStore<T> = this.storeForType( type );
+		const store: IEntityStore<T> = this.storeForType( type );
 		if ( !store ) { return null; }
 
 		return store.create( attributes );
 	}
 
-	private storeForType<T>( type: EntityType ): EntityStore<T> {
+	private storeForType<T>( type: EntityType ): IEntityStore<T> {
 		return this.rootStore.getStore( type );
 	}
 }
