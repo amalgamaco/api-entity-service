@@ -90,7 +90,6 @@ upload_to_sonar:
   tags:
     - docker
   only:
-    - master
     - develop
   dependencies:
     - run_unit_tests

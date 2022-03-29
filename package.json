@@ -1,5 +1,5 @@
 {
-  "name": "@rr-ss/api-entity-service",
+  "name": "@amalgama/api-entity-service",
   "version": "1.0.0",
   "description": "A set of services for handling the communication with a REST API and the creation of the local entities and their relations based on the API responses.",
   "main": "dist/index.js",
@@ -13,16 +13,17 @@
     "test": "NODE_ENV=test JEST_JUNIT_OUTPUT_DIR=reports TZ=UTC jest"
   },
   "repository": {
-    "url": "https://git.amalgama.co/rr-ss/npm-packages/api-entity-service.git"
+    "type": "git",
+    "url": "git@git.amalgama.co:amalgama/packages/npm/api-entity-service.git"
   },
   "author": "Mauro E. Bender <mauro@amalgama.co>",
   "license": "MIT",
   "bugs": {
-    "url": "https://git.amalgama.co/rr-ss/npm-packages/api-entity-service/-/issues"
+    "url": "https://git.amalgama.co/amalgama/packages/npm/api-entity-service/-/issues"
   },
-  "homepage": "https://git.amalgama.co/rr-ss/npm-packages/api-entity-service",
+  "homepage": "https://git.amalgama.co/amalgama/packages/npm/api-entity-service",
   "publishConfig": {
-    "@rr-ss:registry": " https://git.amalgama.co/api/v4/projects/913/packages/npm/"
+    "@amalgama:registry": " https://git.amalgama.co/api/v4/projects/982/packages/npm/"
   },
   "keywords": [
     "api",
