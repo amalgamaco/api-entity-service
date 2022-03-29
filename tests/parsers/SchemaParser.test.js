@@ -86,7 +86,7 @@ describe( 'SchemaParser', () => {
 			const response = { response: userResponse };
 			const result = parser.parse( response );
 
-			expect( result.data.attributes.id ).toEqual( userResponse.id );
+			expect( result.data.attributes.id ).toEqual( parseInt( userResponse.id, 10 ) );
 			expect( result.data.attributes.firstName ).toEqual( userResponse.first_name );
 			expect( result.data.attributes.lastName ).toEqual( userResponse.last_name );
 			expect( result.data.attributes.age ).toEqual( userResponse.age );
@@ -226,12 +226,12 @@ describe( 'SchemaParser', () => {
 			const response = { response: usersResponse };
 			const result = parser.parse( response );
 
-			expect( result.data[ 0 ].attributes.id ).toEqual( usersResponse[ 0 ].id );
+			expect( result.data[ 0 ].attributes.id ).toEqual( parseInt( usersResponse[ 0 ].id, 10 ) );
 			expect( result.data[ 0 ].attributes.firstName ).toEqual( usersResponse[ 0 ].first_name );
 			expect( result.data[ 0 ].attributes.lastName ).toEqual( usersResponse[ 0 ].last_name );
 			expect( result.data[ 0 ].attributes.age ).toEqual( usersResponse[ 0 ].age );
 
-			expect( result.data[ 1 ].attributes.id ).toEqual( usersResponse[ 1 ].id );
+			expect( result.data[ 1 ].attributes.id ).toEqual( parseInt( usersResponse[ 1 ].id, 10 ) );
 			expect( result.data[ 1 ].attributes.firstName ).toEqual( usersResponse[ 1 ].first_name );
 			expect( result.data[ 1 ].attributes.lastName ).toEqual( usersResponse[ 1 ].last_name );
 			expect( result.data[ 1 ].attributes.age ).toEqual( usersResponse[ 1 ].age );
