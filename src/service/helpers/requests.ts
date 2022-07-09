@@ -1,4 +1,9 @@
-import { Attributes, Headers, HTTPMethod } from '../ApiEntityService.types';
+import { stringify } from 'qs';
+import {
+	Attributes, Params, Headers, HTTPMethod
+} from '../ApiEntityService.types';
+
+const serializeQueryParams = ( params: Params ): string => stringify( params );
 
 export const serializeObjectAsFormData = ( properties: Attributes ): FormData => Object
 	.keys( properties )
@@ -41,13 +46,14 @@ export const serializeRequestDataForContentType = (
 		: serializeObjectAsFormData( data )
 );
 
-export const addIncludeToURL = (
-	{ url, include }: { url: string, include: string[] }
-): string => (
-	include.length > 0
-		? `${url}?include=${include.join( ',' )}`
-		: url
-);
+export const addParamsToURL = (
+	{ url, params }: { url: string, params: Params }
+): string => {
+	const serializedParams = serializeQueryParams( params );
+	return serializedParams.length > 0
+		? `${url}?${serializedParams}`
+		: url;
+};
 
 export const requestHasBody = ( method: HTTPMethod ): boolean => (
 	method === HTTPMethod.POST || method === HTTPMethod.PATCH || method === HTTPMethod.PUT

@@ -1,5 +1,5 @@
 import {
-	addIncludeToURL,
+	addParamsToURL,
 	headersForRequest,
 	serializeRequestDataForContentType
 } from '../../../src/service/helpers/requests';
@@ -22,11 +22,66 @@ describe( 'headersForRequest', () => {
 	} );
 } );
 
-describe( 'addIncludeToURL', () => {
-	it( 'appends the include items to the url as the query parameter include', () => {
-		expect( addIncludeToURL( { url: '1/users/3', include: [ 'city', 'state' ] } ) ).toEqual(
-			'1/users/3?include=city,state'
-		);
+describe( 'addParamsToURL', () => {
+	const itAppendsTheCorrectSerializationToTheUrl = ( { params, expectedSerialization } ) => {
+		it( 'appends "?" and the serialization of the params to the url', () => {
+			expect( addParamsToURL( { url: '1/users/3', params } ) ).toEqual(
+				`1/users/3?${expectedSerialization}`
+			);
+		} );
+	};
+
+	describe( 'without params', () => {
+		it( 'does not append anything to the url', () => {
+			expect( addParamsToURL( { url: '1/no/params', params: {} } ) ).toEqual( '1/no/params' );
+		} );
+	} );
+
+	describe( 'with strings only', () => {
+		itAppendsTheCorrectSerializationToTheUrl( {
+			params: { city: 'NY', state: 'astate' },
+			expectedSerialization: 'city=NY&state=astate'
+		} );
+	} );
+
+	describe( 'with strings and numbers', () => {
+		itAppendsTheCorrectSerializationToTheUrl( {
+			params: { search: 'sometext', limit: 34 },
+			expectedSerialization: 'search=sometext&limit=34'
+		} );
+	} );
+
+	describe( 'with strings that have special characters', () => {
+		itAppendsTheCorrectSerializationToTheUrl( {
+			params: { search: 'a question?' },
+			expectedSerialization: 'search=a%20question%3F'
+		} );
+	} );
+
+	describe( 'with arrays', () => {
+		itAppendsTheCorrectSerializationToTheUrl( {
+			params: { ids: [ 12, 24, 36 ] },
+			expectedSerialization: 'ids%5B0%5D=12&ids%5B1%5D=24&ids%5B2%5D=36'
+		} );
+	} );
+
+	describe( 'with objects', () => {
+		itAppendsTheCorrectSerializationToTheUrl( {
+			params: {
+				page: { after: 'an_id', size: 5 },
+				search: { name: 'abc' }
+			},
+			expectedSerialization: 'page%5Bafter%5D=an_id&page%5Bsize%5D=5&search%5Bname%5D=abc'
+		} );
+	} );
+
+	describe( 'with arrays and objects mixed', () => {
+		itAppendsTheCorrectSerializationToTheUrl( {
+			params: {
+				array: { content: [ 1, 2 ] }
+			},
+			expectedSerialization: 'array%5Bcontent%5D%5B0%5D=1&array%5Bcontent%5D%5B1%5D=2'
+		} );
 	} );
 } );
 
