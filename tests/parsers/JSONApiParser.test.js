@@ -48,6 +48,13 @@ const included = [
 	}
 ];
 
+const meta = {
+	page: {
+		prev: 61,
+		next: 73
+	}
+};
+
 const userMapper = {
 	id: 'id',
 	first_name: 'firstName',
@@ -109,6 +116,15 @@ describe( 'JSONApiParser', () => {
 		} );
 	};
 
+	const testParsesMetaCorrectly = ( { response } ) => {
+		it( 'maps the meta content without making any change', () => {
+			const parser = createParser( { mappers: { user: userMapper } } );
+			const parsed = parser.parse( response );
+
+			expect( parsed.meta ).toEqual( meta );
+		} );
+	};
+
 	describe( 'for a response with a single item', () => {
 		const data = createUserData();
 		const {
@@ -158,6 +174,12 @@ describe( 'JSONApiParser', () => {
 				const responseWithIncluded = { data, included };
 
 				testParsesIncludedCorrectly( { response: responseWithIncluded } );
+			} );
+
+			describe( 'with meta', () => {
+				const responseWithMeta = { data, meta };
+
+				testParsesMetaCorrectly( { response: responseWithMeta } );
 			} );
 		} );
 	} );
@@ -253,6 +275,11 @@ describe( 'JSONApiParser', () => {
 			describe( 'with included', () => {
 				const responseWithIncluded = { data, included };
 				testParsesIncludedCorrectly( { response: responseWithIncluded } );
+			} );
+
+			describe( 'with meta', () => {
+				const responseWithMeta = { data, meta };
+				testParsesMetaCorrectly( { response: responseWithMeta } );
 			} );
 		} );
 	} );

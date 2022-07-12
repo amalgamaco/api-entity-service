@@ -10,7 +10,8 @@ export type JSONData = EntitySerialization | (
 
 export interface InitParameters {
 	schema: SchemaEntity,
-	dataKey: string
+	dataKey: string,
+	metaKey: string
 }
 
 export interface ParsedItem {

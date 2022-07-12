@@ -13,10 +13,12 @@ export { SchemaEntity };
 export default class SchemaParser implements IResponseParser {
 	schema: SchemaEntity;
 	dataKey: string;
+	metaKey: string;
 
-	constructor( { schema, dataKey }: InitParameters ) {
+	constructor( { schema, dataKey, metaKey }: InitParameters ) {
 		this.schema = schema;
 		this.dataKey = dataKey;
+		this.metaKey = metaKey;
 	}
 
 	parse( response: JSONData ): ParsedResponse {
@@ -24,13 +26,16 @@ export default class SchemaParser implements IResponseParser {
 			? response[ this.dataKey ] as JSONData
 			: response;
 
+		const responseMetadata = response[ this.metaKey ] || null;
+
 		const { data, included } = Array.isArray( responseData )
 			? this.parseItems( responseData, this.schema )
 			: this.parseItem( responseData, this.schema );
 
 		return {
 			data,
-			included: included.values()
+			included: included.values(),
+			meta: responseMetadata
 		};
 	}
 

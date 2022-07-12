@@ -2,7 +2,7 @@ import { IEntityCreator, IResponseParser, ParsedResponse } from '../types';
 import {
 	IApi, Attributes, Params, HTTPMethod, InitParameters,
 	RequestWithBodyConfig, RequestParameters,
-	MakeRequestParameters, EntityID
+	MakeRequestParameters, EntityID, EntityResponse, SingleEntityResponse, MultiEntityResponse
 } from './ApiEntityService.types';
 import {
 	addParamsToURL, headersForRequest, serializeRequestDataForContentType,
@@ -30,14 +30,14 @@ export default class ApiEntityService<T> {
 		attributes: Attributes,
 		params: Params = {},
 		config: RequestWithBodyConfig = {}
-	): Promise<T> {
+	): Promise<SingleEntityResponse<T>> {
 		return this.request( {
 			method: HTTPMethod.POST,
 			url: `${this.createPath}`,
 			attributes,
 			params,
 			config
-		} ) as Promise<T>;
+		} ) as Promise<SingleEntityResponse<T>>;
 	}
 
 	update(
@@ -45,32 +45,32 @@ export default class ApiEntityService<T> {
 		attributes: Attributes,
 		params: Params = {},
 		config: RequestWithBodyConfig = {}
-	): Promise<T | null> {
+	): Promise<SingleEntityResponse<T> | null> {
 		return this.request( {
 			method: HTTPMethod.PATCH,
 			url: `${this.updatePath( id )}`,
 			attributes,
 			params,
 			config
-		} ) as Promise<T | null>;
+		} ) as Promise<SingleEntityResponse<T> | null>;
 	}
 
-	fetch( id: EntityID, params: Params = {} ): Promise<T> {
+	fetch( id: EntityID, params: Params = {} ): Promise<SingleEntityResponse<T>> {
 		return this.request( {
 			method: HTTPMethod.GET,
 			url: this.defaultResourcePathForId( id ),
 			params,
 			config: {}
-		} ) as Promise<T>;
+		} ) as Promise<SingleEntityResponse<T>>;
 	}
 
-	fetchAll( params: Params = {} ): Promise<T[]> {
+	fetchAll( params: Params = {} ): Promise<MultiEntityResponse<T>> {
 		return this.request( {
 			method: HTTPMethod.GET,
 			url: `${this.listPath}`,
 			params,
 			config: {}
-		} ) as Promise<T[]>;
+		} ) as Promise<MultiEntityResponse<T>>;
 	}
 
 	delete( id: EntityID, params: Params = {} ): Promise<null> {
@@ -88,7 +88,7 @@ export default class ApiEntityService<T> {
 		attributes,
 		params,
 		config
-	}: RequestParameters ): Promise<null | T | T[]> {
+	}: RequestParameters ): Promise<EntityResponse<T> | null> {
 		const response = await this
 			.makeRequest( {
 				method, url, attributes, params, includesFiles: config.includesFiles || false
@@ -156,11 +156,12 @@ export default class ApiEntityService<T> {
 		);
 	}
 
-	private createEntities( parsedResponse: ParsedResponse | null ): ( T | T[] | null ) {
-		return (
-			parsedResponse
-				? this.creator.create( parsedResponse )
-				: null
-		);
+	private createEntities( parsedResponse: ParsedResponse | null ): EntityResponse<T> | null {
+		if ( !parsedResponse ) return null;
+
+		return {
+			data: this.creator.create( parsedResponse ),
+			meta: parsedResponse.meta
+		};
 	}
 }

@@ -1,6 +1,11 @@
 import ApiEntityService from '../../src/service/ApiEntityService';
 import ApiMock from '../__mocks__/ApiMock';
 
+const mockedMetadata = {
+	next: 25,
+	size: 1
+};
+
 const userResponse = {
 	data: {
 		data: {
@@ -39,7 +44,8 @@ const userResponse = {
 				type: 'state',
 				attributes: { name: 'State 5' }
 			}
-		]
+		],
+		meta: mockedMetadata
 	}
 };
 
@@ -70,7 +76,8 @@ const parsedResponse = {
 			id: 5,
 			attributes: { name: 'State 5' }
 		}
-	]
+	],
+	meta: mockedMetadata
 };
 
 const parserMock = {
@@ -121,12 +128,6 @@ describe( 'ApiEntityService', () => {
 		};
 
 		const hasResponse = !!response.data;
-
-		beforeEach( () => {
-			apiMock[ expectedApiMethod ].mockImplementationOnce(
-				() => Promise.resolve( response )
-			);
-		} );
 
 		beforeEach( () => apiMock[ expectedApiMethod ].mockResolvedValueOnce( response ) );
 
@@ -202,11 +203,11 @@ describe( 'ApiEntityService', () => {
 				expect( creatorMock.create ).toHaveBeenCalledWith( parsedResponse );
 			} );
 
-			it( 'returns the created entity/entities', async () => {
+			it( 'returns the created entity/entities with the metadata from the parsed response', async () => {
 				const service = createService();
 				const result = await callService( service );
 
-				expect( result ).toEqual( mockedCreatedEntities );
+				expect( result ).toEqual( { data: mockedCreatedEntities, meta: mockedMetadata } );
 			} );
 		} else {
 			it( 'does not call the parser', async () => {

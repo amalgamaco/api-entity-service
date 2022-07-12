@@ -43,7 +43,50 @@ const matchesTypeAndId = ( type, id ) => item => (
 );
 
 describe( 'SchemaParser', () => {
-	const parser = new SchemaParser( { schema: userSchema, dataKey: 'response' } );
+	const createParser = parserProps => new SchemaParser( {
+		schema: userSchema, dataKey: 'response', ...parserProps
+	} );
+
+	const parser = createParser();
+
+	const testParsesMetaCorrectly = ( { responseWithoutMeta } ) => {
+		const meta = {
+			page: {
+				prev: 61,
+				next: 73
+			}
+		};
+
+		describe( 'when the parser has no meta key', () => {
+			it( 'assigns null to the metadata field', () => {
+				const result = parser.parse( { ...responseWithoutMeta, meta } );
+
+				expect( result.meta ).toBeNull();
+			} );
+		} );
+
+		describe( 'when the parser has a meta key', () => {
+			const parserWithMetaKey = createParser( { metaKey: 'a_meta_key' } );
+
+			describe( 'and the response has a key equal to the meta key', () => {
+				it( 'assigns the value for the meta key directly to the metadata field', () => {
+					const result = parserWithMetaKey.parse( {
+						...responseWithoutMeta, a_meta_key: meta
+					} );
+
+					expect( result.meta ).toEqual( meta );
+				} );
+			} );
+
+			describe( 'and the response has no key equal to the meta key', () => {
+				it( 'assigns null to the metadata field', () => {
+					const result = parserWithMetaKey.parse( { ...responseWithoutMeta, meta } );
+
+					expect( result.meta ).toBeNull();
+				} );
+			} );
+		} );
+	};
 
 	describe( 'for a response with a single item', () => {
 		const userResponse = {
@@ -75,15 +118,15 @@ describe( 'SchemaParser', () => {
 			]
 		};
 
+		const response = { response: userResponse };
+
 		it( 'sets the correct type', () => {
-			const response = { response: userResponse };
 			const result = parser.parse( response );
 
 			expect( result.data.type ).toEqual( 'user' );
 		} );
 
 		it( 'maps the attributes correctly', () => {
-			const response = { response: userResponse };
 			const result = parser.parse( response );
 
 			expect( result.data.attributes.id ).toEqual( parseInt( userResponse.id, 10 ) );
@@ -94,14 +137,12 @@ describe( 'SchemaParser', () => {
 
 		describe( 'with relations', () => {
 			it( 'replaces the nested relations with the ids', () => {
-				const response = { response: userResponse };
 				const { data } = parser.parse( response );
 
 				expect( data.attributes.stateId ).toEqual( userResponse.state.id );
 			} );
 
 			it( 'adds the related item to the included list', () => {
-				const response = { response: userResponse };
 				const { included } = parser.parse( response );
 
 				expect( included ).toContainEqual(
@@ -111,7 +152,6 @@ describe( 'SchemaParser', () => {
 
 			describe( 'and one relation with a nested relation', () => {
 				it( 'replaces the nested relations with the ids in the related data', () => {
-					const response = { response: userResponse };
 					const { included } = parser.parse( response );
 
 					const city = included.find( i => i.type === 'city' );
@@ -120,7 +160,6 @@ describe( 'SchemaParser', () => {
 				} );
 
 				it( 'adds the related item of the related item to the included list', () => {
-					const response = { response: userResponse };
 					const { included } = parser.parse( response );
 
 					expect( included ).toContainEqual(
@@ -131,7 +170,6 @@ describe( 'SchemaParser', () => {
 
 			describe( 'and one is a list relation', () => {
 				it( 'replaces the nested relations with a list of ids in the related data', () => {
-					const response = { response: userResponse };
 					const { data } = parser.parse( response );
 
 					expect( data.attributes.favoriteStatesIds ).toEqual(
@@ -140,7 +178,6 @@ describe( 'SchemaParser', () => {
 				} );
 
 				it( 'adds the related items to the included list', () => {
-					const response = { response: userResponse };
 					const { included } = parser.parse( response );
 
 					expect( included ).toContainEqual(
@@ -152,6 +189,8 @@ describe( 'SchemaParser', () => {
 				} );
 			} );
 		} );
+
+		testParsesMetaCorrectly( { responseWithoutMeta: response } );
 	} );
 
 	describe( 'for a response with multiple items', () => {
@@ -214,8 +253,9 @@ describe( 'SchemaParser', () => {
 			}
 		];
 
+		const response = { response: usersResponse };
+
 		it( 'sets the correct type for all the items', () => {
-			const response = { response: usersResponse };
 			const result = parser.parse( response );
 
 			expect( result.data[ 0 ].type ).toEqual( 'user' );
@@ -223,7 +263,6 @@ describe( 'SchemaParser', () => {
 		} );
 
 		it( 'maps the attributes correctly for all the items', () => {
-			const response = { response: usersResponse };
 			const result = parser.parse( response );
 
 			expect( result.data[ 0 ].attributes.id ).toEqual( parseInt( usersResponse[ 0 ].id, 10 ) );
@@ -239,7 +278,6 @@ describe( 'SchemaParser', () => {
 
 		describe( 'with relations', () => {
 			it( 'replaces the nested relations with the ids', () => {
-				const response = { response: usersResponse };
 				const { data } = parser.parse( response );
 
 				expect( data[ 0 ].attributes.stateId ).toEqual( usersResponse[ 0 ].state.id );
@@ -247,7 +285,6 @@ describe( 'SchemaParser', () => {
 			} );
 
 			it( 'adds the related item to the included list', () => {
-				const response = { response: usersResponse };
 				const { included } = parser.parse( response );
 
 				expect( included ).toContainEqual(
@@ -260,7 +297,6 @@ describe( 'SchemaParser', () => {
 
 			describe( 'and one relation with a nested relation', () => {
 				it( 'replaces the nested relations with the ids in the related data', () => {
-					const response = { response: usersResponse };
 					const { included } = parser.parse( response );
 
 					const cities = included.filter( i => i.type === 'city' );
@@ -270,7 +306,6 @@ describe( 'SchemaParser', () => {
 				} );
 
 				it( 'adds the related item of the related item to the included list', () => {
-					const response = { response: usersResponse };
 					const { included } = parser.parse( response );
 
 					expect( included ).toContainEqual(
@@ -282,7 +317,6 @@ describe( 'SchemaParser', () => {
 				} );
 
 				it( 'doesn\'t have repeated items in the included', () => {
-					const response = { response: usersResponse };
 					const { included } = parser.parse( response );
 
 					expect(
@@ -293,7 +327,6 @@ describe( 'SchemaParser', () => {
 
 			describe( 'and one is a list relation', () => {
 				it( 'replaces the nested relations with a list of ids in the related data', () => {
-					const response = { response: usersResponse };
 					const { data } = parser.parse( response );
 
 					expect( data[ 0 ].attributes.favoriteStatesIds ).toEqual(
@@ -305,7 +338,6 @@ describe( 'SchemaParser', () => {
 				} );
 
 				it( 'adds the related items to the included list', () => {
-					const response = { response: usersResponse };
 					const { included } = parser.parse( response );
 
 					expect( included ).toContainEqual(
@@ -324,5 +356,7 @@ describe( 'SchemaParser', () => {
 				} );
 			} );
 		} );
+
+		testParsesMetaCorrectly( { responseWithoutMeta: response } );
 	} );
 } );

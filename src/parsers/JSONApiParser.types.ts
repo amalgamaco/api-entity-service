@@ -10,6 +10,13 @@ export interface InitParameters {
 	mappers: AttributesMappers;
 }
 
+export type JSONValue =
+    | string
+    | number
+    | boolean
+    | { [ key: string ]: JSONValue }
+    | Array<JSONValue>;
+
 export interface JSONApiAttributes {
 	[ key: string ]: unknown;
 }
@@ -36,5 +43,6 @@ export interface JSONApiData {
 
 export interface ParseParameters {
 	data: JSONApiData;
-	included: JSONApiData[]
+	included: JSONApiData[];
+	meta?: JSONValue;
 }
