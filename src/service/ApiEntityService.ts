@@ -1,11 +1,11 @@
 import { IEntityCreator, IResponseParser, ParsedResponse } from '../types';
 import {
-	IApi, Attributes, HTTPMethod, InitParameters,
-	RequestWithBodyConfig, RequestCofig, RequestParameters,
+	IApi, Attributes, Params, HTTPMethod, InitParameters,
+	RequestWithBodyConfig, RequestParameters,
 	MakeRequestParameters, EntityID
 } from './ApiEntityService.types';
 import {
-	addIncludeToURL, headersForRequest, serializeRequestDataForContentType,
+	addParamsToURL, headersForRequest, serializeRequestDataForContentType,
 	requestHasBody
 } from './helpers/requests';
 
@@ -28,50 +28,57 @@ export default class ApiEntityService<T> {
 
 	create(
 		attributes: Attributes,
-		{ includesFiles, include }: RequestWithBodyConfig = {}
+		params: Params = {},
+		config: RequestWithBodyConfig = {}
 	): Promise<T> {
 		return this.request( {
 			method: HTTPMethod.POST,
 			url: `${this.createPath}`,
 			attributes,
-			config: { include, includesFiles }
+			params,
+			config
 		} ) as Promise<T>;
 	}
 
 	update(
 		id: EntityID,
 		attributes: Attributes,
-		{ includesFiles, include }: RequestWithBodyConfig = {}
+		params: Params = {},
+		config: RequestWithBodyConfig = {}
 	): Promise<T | null> {
 		return this.request( {
 			method: HTTPMethod.PATCH,
 			url: `${this.updatePath( id )}`,
 			attributes,
-			config: { include, includesFiles }
+			params,
+			config
 		} ) as Promise<T | null>;
 	}
 
-	fetch( id: EntityID, { include }: RequestCofig = {} ): Promise<T> {
+	fetch( id: EntityID, params: Params = {} ): Promise<T> {
 		return this.request( {
 			method: HTTPMethod.GET,
 			url: this.defaultResourcePathForId( id ),
-			config: { include }
+			params,
+			config: {}
 		} ) as Promise<T>;
 	}
 
-	fetchAll( { include }: RequestCofig = {} ): Promise<T[]> {
+	fetchAll( params: Params = {} ): Promise<T[]> {
 		return this.request( {
 			method: HTTPMethod.GET,
 			url: `${this.listPath}`,
-			config: { include }
+			params,
+			config: {}
 		} ) as Promise<T[]>;
 	}
 
-	delete( id: EntityID, { include }: RequestCofig = {} ): Promise<null> {
+	delete( id: EntityID, params: Params = {} ): Promise<null> {
 		return this.request( {
 			method: HTTPMethod.DELETE,
 			url: `${this.deletePath( id )}`,
-			config: { include }
+			params,
+			config: {}
 		} ) as Promise<null>;
 	}
 
@@ -79,11 +86,12 @@ export default class ApiEntityService<T> {
 		method = HTTPMethod.GET,
 		url,
 		attributes,
-		config: { includesFiles = false, include = [] }
+		params,
+		config
 	}: RequestParameters ): Promise<null | T | T[]> {
 		const response = await this
 			.makeRequest( {
-				method, url, attributes, include, includesFiles
+				method, url, attributes, params, includesFiles: config.includesFiles || false
 			} );
 
 		const { data } = response;
@@ -96,18 +104,18 @@ export default class ApiEntityService<T> {
 		method,
 		url,
 		attributes,
-		include = [],
+		params,
 		includesFiles = false
 	}: MakeRequestParameters ) => {
-		const urlWithInclude = addIncludeToURL( { url, include } );
+		const urlWithParams = addParamsToURL( { url, params } );
 		const apiCall = this.api[ method ].bind( this.api );
 
 		if ( !requestHasBody( method ) ) {
-			return apiCall( urlWithInclude );
+			return apiCall( urlWithParams );
 		}
 
 		return apiCall(
-			urlWithInclude,
+			urlWithParams,
 			attributes,
 			{
 				headers: headersForRequest( { includesFiles } ),

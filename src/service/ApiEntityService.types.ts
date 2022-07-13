@@ -4,6 +4,15 @@ export type Attributes = {
 	[ key: string ]: unknown
 }
 
+export type SerializableParam = string
+	| number
+	| SerializableParam[]
+	| { [ key: string ]: SerializableParam }
+
+export type Params = {
+	[ key: string ]: SerializableParam
+}
+
 export type Headers = {
 	[ key: string ]: string
 }
@@ -49,11 +58,7 @@ export interface InitParameters {
 	paths: { [ key: string ]: string }
 }
 
-export type RequestCofig = {
-	include?: string[]
-}
-
-export type RequestWithBodyConfig = RequestCofig & {
+export type RequestWithBodyConfig = {
 	includesFiles?: boolean
 }
 
@@ -61,6 +66,7 @@ export type RequestParameters = {
 	method: HTTPMethod,
 	url: string,
 	attributes?: Attributes,
+	params: Params,
 	config: RequestWithBodyConfig
 }
 
@@ -68,7 +74,7 @@ export type MakeRequestParameters = {
 	method: HTTPMethod,
 	url: string,
 	attributes?: Attributes,
-	include?: string[],
+	params: Params,
 	includesFiles?: boolean
 }
 

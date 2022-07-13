@@ -109,11 +109,12 @@ describe( 'ApiEntityService', () => {
 		id = undefined,
 		attributes = undefined
 	} ) => {
-		const callService = ( service, config ) => {
+		const callService = ( service, params, config ) => {
 			const parameters = [];
 
 			if ( id ) { parameters.push( id ); }
 			if ( attributes ) { parameters.push( attributes ); }
+			if ( params ) { parameters.push( params ); }
 			if ( config ) { parameters.push( config ); }
 
 			return service[ serviceMethod ]( ...parameters );
@@ -147,7 +148,7 @@ describe( 'ApiEntityService', () => {
 			describe( 'when the includesFiles flag is true', () => {
 				it( 'changes the content type header to multipart/form-data', () => {
 					const service = createService();
-					callService( service, { includesFiles: true } );
+					callService( service, {}, { includesFiles: true } );
 
 					expect( apiMock[ expectedApiMethod ].mock.calls[ 0 ][ 2 ] ).toEqual(
 						{
@@ -166,15 +167,22 @@ describe( 'ApiEntityService', () => {
 			} );
 		}
 
-		describe( 'with the include parameter', () => {
-			it( 'calls the correct api method with the correct path appending the include parameter', () => {
+		describe( 'with the "params" parameter', () => {
+			it( 'calls the correct api method with the correct path appending the params', () => {
 				const service = createService();
-				const include = [ 'city', 'state' ];
+				const params = {
+					search: 'A text',
+					page: {
+						after: 82,
+						size: 5
+					},
+					include: [ 'city' ]
+				};
 
-				callService( service, { include } );
+				callService( service, params );
 
 				expect( apiMock[ expectedApiMethod ].mock.calls[ 0 ][ 0 ] ).toEqual(
-					`${expectedPath}?include=city,state`
+					`${expectedPath}?search=A%20text&page%5Bafter%5D=82&page%5Bsize%5D=5&include%5B0%5D=city`
 				);
 			} );
 		} );

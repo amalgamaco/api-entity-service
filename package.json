@@ -96,5 +96,8 @@
     "npm": {
       "skipChecks": true
     }
+  },
+  "dependencies": {
+    "@types/qs": "^6.9.7"
   }
 }
