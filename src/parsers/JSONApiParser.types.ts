@@ -1,6 +1,4 @@
-export interface AttributesMapper {
-	[ key: string ]: string;
-}
+import { AttributesMapper } from './types';
 
 export interface AttributesMappers {
 	[ key: string ]: AttributesMapper

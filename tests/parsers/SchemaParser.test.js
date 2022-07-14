@@ -1,5 +1,7 @@
 import SchemaParser, { SchemaEntity } from '../../src/parsers/SchemaParser';
 
+/* eslint-disable camelcase */
+
 const stateSchema = new SchemaEntity( {
 	type: 'state',
 	mapper: {
@@ -10,11 +12,7 @@ const stateSchema = new SchemaEntity( {
 
 const citySchema = new SchemaEntity( {
 	type: 'city',
-	mapper: {
-		id: 'id',
-		name: 'name',
-		state_id: 'stateId'
-	},
+	mapper: ( { id, name, state_id } ) => ( { id, name, stateId: state_id } ),
 	relations: {
 		state: stateSchema
 	}
