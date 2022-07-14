@@ -1,9 +1,12 @@
-import { IEntityCreator, IResponseParser, ParsedResponse } from '../types';
+import {
+	IEntityCreator, IErrorHandler, IResponseParser, ParsedResponse
+} from '../types';
 import {
 	IApi, Attributes, Params, HTTPMethod, InitParameters,
 	RequestWithBodyConfig, RequestParameters,
 	MakeRequestParameters, EntityID, EntityResponse, SingleEntityResponse, MultiEntityResponse
 } from './ApiEntityService.types';
+import NullErrorHandler from '../errorHandlers/NullErrorHandler';
 import {
 	addParamsToURL, headersForRequest, serializeRequestDataForContentType,
 	requestHasBody
@@ -15,15 +18,17 @@ export default class ApiEntityService<T> {
 	readonly parser: IResponseParser;
 	readonly creator: IEntityCreator;
 	readonly paths: { [ key: string ]: string };
+	readonly errorHandler: IErrorHandler;
 
 	constructor( {
-		api, basePath, parser, creator, paths = {}
+		api, basePath, parser, creator, paths = {}, errorHandler = new NullErrorHandler()
 	}: InitParameters ) {
 		this.api = api;
 		this.basePath = basePath;
 		this.parser = parser;
 		this.creator = creator;
 		this.paths = paths;
+		this.errorHandler = errorHandler;
 	}
 
 	create(
@@ -89,15 +94,20 @@ export default class ApiEntityService<T> {
 		params,
 		config
 	}: RequestParameters ): Promise<EntityResponse<T> | null> {
-		const response = await this
-			.makeRequest( {
-				method, url, attributes, params, includesFiles: config.includesFiles || false
-			} );
+		try {
+			const response = await this
+				.makeRequest( {
+					method, url, attributes, params, includesFiles: config.includesFiles || false
+				} );
 
-		const { data } = response;
-		const parsedResponse = this.parseResponse( data );
+			const { data } = response;
+			const parsedResponse = this.parseResponse( data );
 
-		return this.createEntities( parsedResponse );
+			return this.createEntities( parsedResponse );
+		} catch ( error ) {
+			this.errorHandler.handleError( error );
+			return null;
+		}
 	}
 
 	private makeRequest = ( {

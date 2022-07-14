@@ -1,4 +1,4 @@
-import { IEntityCreator, IResponseParser } from '../types';
+import { IEntityCreator, IErrorHandler, IResponseParser } from '../types';
 
 export type Attributes = {
 	[ key: string ]: unknown
@@ -64,7 +64,8 @@ export interface InitParameters {
 	basePath: string,
 	parser: IResponseParser,
 	creator: IEntityCreator,
-	paths: { [ key: string ]: string }
+	paths: { [ key: string ]: string },
+	errorHandler: IErrorHandler
 }
 
 export type RequestWithBodyConfig = {

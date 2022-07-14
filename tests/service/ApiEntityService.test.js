@@ -92,18 +92,24 @@ const creatorMock = {
 
 const basePath = '1/users';
 
+const errorHandlerMock = {
+	handleError: jest.fn()
+};
+
 describe( 'ApiEntityService', () => {
 	const createService = ( {
 		api = apiMock,
 		parser = parserMock,
 		creator = creatorMock,
-		paths = {}
+		paths = {},
+		errorHandler = errorHandlerMock
 	} = {} ) => new ApiEntityService( {
 		api,
 		basePath,
 		parser,
 		creator,
-		paths
+		paths,
+		errorHandler
 	} );
 
 	beforeEach( () => jest.clearAllMocks() );
@@ -129,7 +135,7 @@ describe( 'ApiEntityService', () => {
 
 		const hasResponse = !!response.data;
 
-		beforeEach( () => apiMock[ expectedApiMethod ].mockResolvedValueOnce( response ) );
+		beforeEach( () => apiMock[ expectedApiMethod ].mockResolvedValue( response ) );
 
 		if ( attributes ) {
 			it( 'calls the correct api method with the correct path, attributes and config', () => {
@@ -185,6 +191,18 @@ describe( 'ApiEntityService', () => {
 				expect( apiMock[ expectedApiMethod ].mock.calls[ 0 ][ 0 ] ).toEqual(
 					`${expectedPath}?search=A%20text&page%5Bafter%5D=82&page%5Bsize%5D=5&include%5B0%5D=city`
 				);
+			} );
+		} );
+
+		describe( 'when the api throws an error', () => {
+			it( 'calls the error handlers handleError method with the error', async () => {
+				const error = new Error( 'Invalid entity' );
+				apiMock[ expectedApiMethod ].mockRejectedValue( error );
+				const service = createService();
+
+				await callService( service );
+
+				expect( errorHandlerMock.handleError ).toHaveBeenCalledWith( error );
 			} );
 		} );
 
