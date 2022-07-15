@@ -13,6 +13,7 @@ export interface ParsedEntity {
 export interface ParsedResponse {
 	data: ParsedEntity | ParsedEntity[];
 	included: ParsedEntity[];
+	meta: unknown;
 }
 
 export interface IResponseParser {

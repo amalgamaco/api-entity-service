@@ -19,6 +19,15 @@ export type Headers = {
 
 export type ApiResponse = Promise<{ data: unknown }>;
 
+export type EntityResponse<Entity> = {
+	data: null | Entity | Entity[],
+	meta: unknown
+};
+
+export type SingleEntityResponse<Entity> = EntityResponse<Entity> & { data: Entity };
+
+export type MultiEntityResponse<Entity> = EntityResponse<Entity> & { data: Entity[] };
+
 export interface ApiMethodWithoutBody {
 	( url: string ): ApiResponse
 }
