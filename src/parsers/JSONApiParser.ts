@@ -8,6 +8,8 @@ import {
 	AttributesMappers, JSONApiData, JSONApiRelationships
 } from './JSONApiParser.types';
 
+import { mapAttributes } from './helpers/mappers';
+
 export default class JSONApiParser implements IResponseParser {
 	private mappers: AttributesMappers;
 
@@ -55,17 +57,9 @@ export default class JSONApiParser implements IResponseParser {
 			...relatedIdAttributes
 		};
 
-		const attributesMap = this.mappers[ type ];
+		const attributesMapper = this.mappers[ type ];
 
-		const parsed = Object
-			.entries( attributesMap )
-			.reduce(
-				( result, [ serializationKey, entityKey ] ) => {
-					result[ entityKey ] = serialization[ serializationKey ];
-					return result;
-				},
-				<{ [ key: string ]: unknown }> {}
-			);
+		const parsed = mapAttributes( attributesMapper, serialization );
 
 		const attributes: EntityAttributes = {
 			...parsed,

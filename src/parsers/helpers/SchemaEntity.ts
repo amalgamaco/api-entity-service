@@ -1,12 +1,6 @@
 import { EntityType } from '../../types';
-
-interface AttributesMapper {
-	[ key: string ]: string;
-}
-
-interface Serialization {
-	[ key: string ]: unknown
-}
+import { AttributesMapper, Serialization } from '../types';
+import { mapAttributes } from './mappers';
 
 type SchemaRelations = {
 	// eslint-disable-next-line no-use-before-define
@@ -31,14 +25,6 @@ export default class SchemaEntity {
 	}
 
 	map( serialization: Serialization ): Serialization {
-		return Object
-			.entries( this.mapper )
-			.reduce(
-				( result, [ serializationKey, entityKey ] ) => {
-					result[ entityKey ] = serialization[ serializationKey ];
-					return result;
-				},
-				<Serialization>{}
-			);
+		return mapAttributes( this.mapper, serialization );
 	}
 }
