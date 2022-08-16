@@ -1,7 +1,9 @@
-import { IEntityCreator, IErrorHandler, IResponseParser } from '../types';
+import {
+	IEntityCreator, IErrorHandler, IResponseParser, JSONValue
+} from '../types';
 
 export type Attributes = {
-	[ key: string ]: unknown
+	[ key: string ]: JSONValue
 }
 
 export type SerializableParam = string
@@ -17,7 +19,7 @@ export type Headers = {
 	[ key: string ]: string
 }
 
-export type ApiResponse = Promise<{ data: unknown }>;
+export type ApiResponse = Promise<unknown>;
 
 export type EntityResponse<Entity> = {
 	data: null | Entity | Entity[],
@@ -28,29 +30,6 @@ export type SingleEntityResponse<Entity> = EntityResponse<Entity> & { data: Enti
 
 export type MultiEntityResponse<Entity> = EntityResponse<Entity> & { data: Entity[] };
 
-export interface ApiMethodWithoutBody {
-	( url: string ): ApiResponse
-}
-
-export interface ApiMethodWithBody {
-	(
-		url: string,
-		body?: { [ key: string ]: unknown },
-		config?: {
-			headers?: Headers,
-			transformRequest( data: Attributes, headers: Headers ): unknown
-		}
-	): ApiResponse
-}
-
-export interface IApi {
-	get: ApiMethodWithoutBody,
-	post: ApiMethodWithBody,
-	patch: ApiMethodWithBody,
-	put: ApiMethodWithBody,
-	delete: ApiMethodWithoutBody
-}
-
 export enum HTTPMethod {
 	POST = 'post',
 	PATCH = 'patch',
@@ -59,13 +38,25 @@ export enum HTTPMethod {
 	DELETE = 'delete'
 }
 
+export interface ApiRequestConfig {
+	method: HTTPMethod,
+	path: string,
+	params?: Params,
+	data?: JSONValue,
+	sendAsFormData: boolean
+}
+
+export interface IApi {
+	request: ( config: ApiRequestConfig ) => ApiResponse
+}
+
 export interface InitParameters {
 	api: IApi,
 	basePath: string,
 	parser: IResponseParser,
 	creator: IEntityCreator,
-	paths: { [ key: string ]: string },
-	errorHandler: IErrorHandler
+	paths?: { [ key: string ]: string },
+	errorHandler?: IErrorHandler
 }
 
 export type RequestWithBodyConfig = {

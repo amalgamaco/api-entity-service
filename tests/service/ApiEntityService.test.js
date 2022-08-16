@@ -8,48 +8,44 @@ const mockedMetadata = {
 
 const userResponse = {
 	data: {
-		data: {
-			id: '1',
-			type: 'user',
-			attributes: {
-				first_name: 'John',
-				last_name: 'Doe',
-				age: 33
+		id: '1',
+		type: 'user',
+		attributes: {
+			first_name: 'John',
+			last_name: 'Doe',
+			age: 33
+		},
+		relationships: {
+			city: {
+				data: { id: 3 },
+				type: 'city'
 			},
+			state: {
+				data: { id: 5 },
+				type: 'state'
+			}
+		}
+	},
+	included: [
+		{
+			id: 3,
+			type: 'city',
+			attributes: { name: 'City 3' },
 			relationships: {
-				city: {
-					data: { id: 3 },
-					type: 'city'
-				},
 				state: {
-					data: { id: 5 },
-					type: 'state'
+					type: 'state',
+					data: { id: 5 }
 				}
 			}
 		},
-		included: [
-			{
-				id: 3,
-				type: 'city',
-				attributes: { name: 'City 3' },
-				relationships: {
-					state: {
-						type: 'state',
-						data: { id: 5 }
-					}
-				}
-			},
-			{
-				id: 5,
-				type: 'state',
-				attributes: { name: 'State 5' }
-			}
-		],
-		meta: mockedMetadata
-	}
+		{
+			id: 5,
+			type: 'state',
+			attributes: { name: 'State 5' }
+		}
+	],
+	meta: mockedMetadata
 };
-
-const nullResponse = { data: null };
 
 const apiMock = new ApiMock();
 
@@ -133,23 +129,22 @@ describe( 'ApiEntityService', () => {
 			return service[ serviceMethod ]( ...parameters );
 		};
 
-		const hasResponse = !!response.data;
+		const hasResponse = !!response;
 
-		beforeEach( () => apiMock[ expectedApiMethod ].mockResolvedValue( response ) );
+		beforeEach( () => apiMock.request.mockResolvedValue( response ) );
 
 		if ( attributes ) {
 			it( 'calls the correct api method with the correct path, attributes and config', () => {
 				const service = createService();
 				callService( service );
 
-				expect( apiMock[ expectedApiMethod ] ).toHaveBeenCalledWith(
-					expectedPath,
-					attributes,
-					{
-						headers: { 'Content-Type': 'application/json' },
-						transformRequest: expect.any( Function )
-					}
-				);
+				expect( apiMock.request ).toHaveBeenCalledWith( {
+					method: expectedApiMethod,
+					path: expectedPath,
+					params: {},
+					data: attributes,
+					sendAsFormData: false
+				} );
 			} );
 
 			describe( 'when the includesFiles flag is true', () => {
@@ -157,11 +152,8 @@ describe( 'ApiEntityService', () => {
 					const service = createService();
 					callService( service, {}, { includesFiles: true } );
 
-					expect( apiMock[ expectedApiMethod ].mock.calls[ 0 ][ 2 ] ).toEqual(
-						{
-							headers: { 'Content-Type': 'multipart/form-data' },
-							transformRequest: expect.any( Function )
-						}
+					expect( apiMock.request ).toHaveBeenCalledWith(
+						expect.objectContaining( { sendAsFormData: true } )
 					);
 				} );
 			} );
@@ -170,7 +162,13 @@ describe( 'ApiEntityService', () => {
 				const service = createService();
 				callService( service );
 
-				expect( apiMock[ expectedApiMethod ] ).toHaveBeenCalledWith( expectedPath );
+				expect( apiMock.request ).toHaveBeenCalledWith( {
+					method: expectedApiMethod,
+					path: expectedPath,
+					params: {},
+					data: undefined,
+					sendAsFormData: false
+				} );
 			} );
 		}
 
@@ -188,8 +186,8 @@ describe( 'ApiEntityService', () => {
 
 				callService( service, params );
 
-				expect( apiMock[ expectedApiMethod ].mock.calls[ 0 ][ 0 ] ).toEqual(
-					`${expectedPath}?search=A%20text&page%5Bafter%5D=82&page%5Bsize%5D=5&include%5B0%5D=city`
+				expect( apiMock.request ).toHaveBeenCalledWith(
+					expect.objectContaining( { params } )
 				);
 			} );
 		} );
@@ -197,7 +195,7 @@ describe( 'ApiEntityService', () => {
 		describe( 'when the api throws an error', () => {
 			it( 'calls the error handlers handleError method with the error', async () => {
 				const error = new Error( 'Invalid entity' );
-				apiMock[ expectedApiMethod ].mockRejectedValue( error );
+				apiMock.request.mockRejectedValue( error );
 				const service = createService();
 
 				await callService( service );
@@ -211,7 +209,7 @@ describe( 'ApiEntityService', () => {
 				const service = createService();
 				await callService( service );
 
-				expect( parserMock.parse ).toHaveBeenCalledWith( userResponse.data );
+				expect( parserMock.parse ).toHaveBeenCalledWith( userResponse );
 			} );
 
 			it( 'calls the creator with the parsed response', async () => {
@@ -317,7 +315,7 @@ describe( 'ApiEntityService', () => {
 			serviceMethod: 'delete',
 			expectedApiMethod: 'delete',
 			expectedPath: `${basePath}/${id}`,
-			response: nullResponse,
+			response: null,
 			hasResponse: false,
 			id
 		} );
