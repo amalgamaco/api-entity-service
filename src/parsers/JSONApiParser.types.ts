@@ -1,3 +1,4 @@
+import { JSONValue } from '../types';
 import { AttributesMapper } from './types';
 
 export interface AttributesMappers {
@@ -7,13 +8,6 @@ export interface AttributesMappers {
 export interface InitParameters {
 	mappers: AttributesMappers;
 }
-
-export type JSONValue =
-    | string
-    | number
-    | boolean
-    | { [ key: string ]: JSONValue }
-    | Array<JSONValue>;
 
 export interface JSONApiAttributes {
 	[ key: string ]: unknown;

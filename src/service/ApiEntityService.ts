@@ -7,10 +7,6 @@ import {
 	MakeRequestParameters, EntityID, EntityResponse, SingleEntityResponse, MultiEntityResponse
 } from './ApiEntityService.types';
 import NullErrorHandler from '../errorHandlers/NullErrorHandler';
-import {
-	addParamsToURL, headersForRequest, serializeRequestDataForContentType,
-	requestHasBody
-} from './helpers/requests';
 
 export default class ApiEntityService<T> {
 	readonly api: IApi;
@@ -100,8 +96,7 @@ export default class ApiEntityService<T> {
 					method, url, attributes, params, includesFiles: config.includesFiles || false
 				} );
 
-			const { data } = response;
-			const parsedResponse = this.parseResponse( data );
+			const parsedResponse = this.parseResponse( response );
 
 			return this.createEntities( parsedResponse );
 		} catch ( error ) {
@@ -116,23 +111,15 @@ export default class ApiEntityService<T> {
 		attributes,
 		params,
 		includesFiles = false
-	}: MakeRequestParameters ) => {
-		const urlWithParams = addParamsToURL( { url, params } );
-		const apiCall = this.api[ method ].bind( this.api );
-
-		if ( !requestHasBody( method ) ) {
-			return apiCall( urlWithParams );
-		}
-
-		return apiCall(
-			urlWithParams,
-			attributes,
-			{
-				headers: headersForRequest( { includesFiles } ),
-				transformRequest: serializeRequestDataForContentType
-			}
-		);
-	};
+	}: MakeRequestParameters ) => (
+		this.api.request( {
+			method,
+			path: url,
+			params,
+			data: attributes,
+			sendAsFormData: includesFiles
+		} )
+	);
 
 	// Paths
 	private get createPath(): string {

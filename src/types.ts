@@ -27,3 +27,10 @@ export interface IEntityCreator {
 export interface IErrorHandler {
 	handleError( error: unknown ): unknown
 }
+
+export type JSONValue =
+    | string
+    | number
+    | boolean
+    | { [ key: string ]: JSONValue }
+    | Array<JSONValue>;
