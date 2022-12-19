@@ -318,8 +318,8 @@ describe( 'SchemaParser', () => {
 					const { included } = parser.parse( response );
 
 					expect(
-						included.filter( matchesTypeAndId( 'state', usersResponse[ 0 ].state.id ) ).length
-					).toEqual( 1 );
+						included.filter( matchesTypeAndId( 'state', usersResponse[ 0 ].state.id ) )
+					).toHaveLength( 1 );
 				} );
 			} );
 

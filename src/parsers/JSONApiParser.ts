@@ -5,7 +5,7 @@ import {
 
 import {
 	InitParameters, ParseParameters,
-	AttributesMappers, JSONApiData, JSONApiRelationships
+	AttributesMappers, JSONApiData, JSONApiRelationships, JSONApiRelationshipData
 } from './JSONApiParser.types';
 
 import { mapAttributes } from './helpers/mappers';
@@ -84,7 +84,9 @@ export default class JSONApiParser implements IResponseParser {
 						[ `${relationshipName}_id` ]: parseInt( data.id, 10 )
 					} ) : ( {
 						...result,
-						[ `${relationshipName}_ids` ]: data.map( r => parseInt( r.id, 10 ) )
+						[ `${relationshipName}_ids` ]: data.map(
+							( r: JSONApiRelationshipData ) => parseInt( r.id, 10 )
+						)
 					} );
 			}, {} );
 	}

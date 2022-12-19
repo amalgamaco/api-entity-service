@@ -1,4 +1,4 @@
-image: node:17.0.1
+image: node:18-alpine
 
 variables:
   FF_USE_FASTZIP: "true"

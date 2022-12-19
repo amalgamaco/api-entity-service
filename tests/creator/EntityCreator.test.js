@@ -73,7 +73,7 @@ describe( 'EntityCreator', () => {
 				expect( rootStore.getStore ).toHaveBeenCalledWith( 'state' );
 			} );
 
-			it( 'calls the create method with the given attributes in the correct store for the included ', () => {
+			it( 'calls the create method with the given attributes in the correct store for the included', () => {
 				const { citiesStore, statesStore, entityCreator } = createEntityCreator();
 				entityCreator.create( parsedResponse );
 
@@ -98,7 +98,7 @@ describe( 'EntityCreator', () => {
 				expect( rootStore.getStore ).toHaveBeenCalledWith( 'user' );
 			} );
 
-			it( 'calls the create method with the given attributes in the correct store ', () => {
+			it( 'calls the create method with the given attributes in the correct store', () => {
 				const { usersStore, entityCreator } = createEntityCreator();
 				entityCreator.create( parsedResponse );
 
@@ -146,7 +146,7 @@ describe( 'EntityCreator', () => {
 				expect( rootStore.getStore ).toHaveBeenCalledWith( 'user' );
 			} );
 
-			it( 'calls the create method with the given attributes in the correct store for each of the items ', () => {
+			it( 'calls the create method with the given attributes in the correct store for each of the items', () => {
 				const { usersStore, entityCreator } = createEntityCreator();
 				entityCreator.create( parsedResponse );
 

@@ -1,5 +1,4 @@
 import ApiEntityService from '../../src/service/ApiEntityService';
-import ApiMock from '../__mocks__/ApiMock';
 
 const mockedMetadata = {
 	next: 25,
@@ -47,7 +46,9 @@ const userResponse = {
 	meta: mockedMetadata
 };
 
-const apiMock = new ApiMock();
+const apiMock = {
+	request: jest.fn( () => Promise.resolve() )
+};
 
 const parsedResponse = {
 	data: {

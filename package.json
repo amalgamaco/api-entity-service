@@ -45,6 +45,7 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jest": "^27.1.7",
     "jest": "^27.3.1",
     "jest-junit": "^13.0.0",
     "release-it": "^14.13.1",
@@ -96,5 +97,6 @@
     "npm": {
       "skipChecks": true
     }
-  }
+  },
+  "dependencies": {}
 }

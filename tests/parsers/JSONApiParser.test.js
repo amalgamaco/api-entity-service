@@ -196,7 +196,7 @@ describe( 'JSONApiParser', () => {
 
 			describe( 'with a functional attributes mapper', () => {
 				// const cityFunctionalMapper = ( { id, name, state_id } ) => ( {
-				// 	id, name, stateId
+				//   id, name, stateId
 				// } );
 				itMapsAttributesAndRelationshipsCorrectly( { mappers: { user: userFunctionalMapper } } );
 			} );
