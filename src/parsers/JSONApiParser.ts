@@ -4,7 +4,7 @@ import {
 } from '../types';
 
 import {
-	InitParameters, ParseParameters,
+	InitParameters, JSONApiResponse,
 	AttributesMappers, JSONApiData, JSONApiRelationships, JSONApiRelationshipData
 } from './JSONApiParser.types';
 
@@ -17,7 +17,7 @@ export default class JSONApiParser implements IResponseParser {
 		this.mappers = mappers;
 	}
 
-	parse( { data, included, meta }: ParseParameters ): ParsedResponse {
+	parse( { data, included, meta }: JSONApiResponse ): ParsedResponse {
 		return ( {
 			data: this.parseData( data ),
 			included: this.parseIncluded( included ),
