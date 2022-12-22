@@ -2,6 +2,13 @@ import {
 	IEntityCreator, IErrorHandler, IResponseParser, JSONValue
 } from '../types';
 
+export interface ICustomPaths {
+	create?: string
+	list?: string
+	update?: string
+	delete?: string
+}
+
 export type Attributes = {
 	[ key: string ]: JSONValue
 }

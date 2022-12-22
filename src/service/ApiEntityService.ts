@@ -4,7 +4,8 @@ import {
 import {
 	IApi, Attributes, Params, HTTPMethod, InitParameters,
 	RequestWithBodyConfig, RequestParameters,
-	MakeRequestParameters, EntityID, EntityResponse, SingleEntityResponse, MultiEntityResponse
+	MakeRequestParameters, EntityID, EntityResponse,
+	SingleEntityResponse, MultiEntityResponse, ICustomPaths
 } from './ApiEntityService.types';
 import NullErrorHandler from '../errorHandlers/NullErrorHandler';
 
@@ -13,7 +14,7 @@ export default class ApiEntityService<T> {
 	readonly basePath: string;
 	readonly parser: IResponseParser;
 	readonly creator: IEntityCreator;
-	readonly paths: { [ key: string ]: string };
+	readonly paths: ICustomPaths;
 	readonly errorHandler: IErrorHandler;
 
 	constructor( {

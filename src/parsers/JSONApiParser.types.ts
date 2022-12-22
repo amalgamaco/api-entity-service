@@ -33,7 +33,7 @@ export interface JSONApiData {
 	relationships: JSONApiRelationships;
 }
 
-export interface ParseParameters {
+export interface JSONApiResponse {
 	data: JSONApiData;
 	included: JSONApiData[];
 	meta?: JSONValue;
