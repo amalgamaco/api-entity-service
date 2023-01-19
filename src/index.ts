@@ -23,8 +23,11 @@ export type {
 } from './creator/EntityCreator.types';
 
 export type {
-	IApi, ApiRequestConfig, RequestWithBodyConfig,
-	SingleEntityResponse, MultiEntityResponse, Params
+	IApi, ApiRequestConfig, ApiResponse,
+	RequestParameters, RequestWithBodyConfig, HTTPMethod,
+	Attributes, SerializableParam, Params, Headers,
+	EntityResponse, SingleEntityResponse, MultiEntityResponse,
+	EntityID
 } from './service/ApiEntityService.types';
 
 export type {
