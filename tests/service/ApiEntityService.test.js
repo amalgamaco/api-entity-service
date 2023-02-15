@@ -89,8 +89,8 @@ const creatorMock = {
 
 const basePath = '1/users';
 
-const errorHandlerMock = {
-	handleError: jest.fn()
+const errorParserMock = {
+	parse: jest.fn( error => error )
 };
 
 describe( 'ApiEntityService', () => {
@@ -99,14 +99,14 @@ describe( 'ApiEntityService', () => {
 		parser = parserMock,
 		creator = creatorMock,
 		paths = {},
-		errorHandler = errorHandlerMock
+		errorParser = errorParserMock
 	} = {} ) => new ApiEntityService( {
 		api,
 		basePath,
 		parser,
 		creator,
 		paths,
-		errorHandler
+		errorParser
 	} );
 
 	beforeEach( () => jest.clearAllMocks() );
@@ -194,14 +194,17 @@ describe( 'ApiEntityService', () => {
 		} );
 
 		describe( 'when the api throws an error', () => {
-			it( 'calls the error handlers handleError method with the error', async () => {
+			it( 'calls the error parser parse method with the error', async () => {
 				const error = new Error( 'Invalid entity' );
 				apiMock.request.mockRejectedValue( error );
 				const service = createService();
 
-				await callService( service );
+				try {
+					await callService( service );
+				// eslint-disable-next-line no-empty
+				} catch {}
 
-				expect( errorHandlerMock.handleError ).toHaveBeenCalledWith( error );
+				expect( errorParserMock.parse ).toHaveBeenCalledWith( error );
 			} );
 		} );
 

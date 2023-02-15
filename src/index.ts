@@ -31,7 +31,16 @@ export type {
 } from './service/ApiEntityService.types';
 
 export type {
-	IErrorHandler, IEntityCreator, IResponseParser,
+	IErrorParser, IEntityCreator, IResponseParser,
 	JSONValue, ParsedEntity, ParsedResponse,
 	EntityAttributes
 } from './types';
+
+export { default as JSONApiErrorParser } from './errorParsers/JSONApiErrorParser';
+export { default as NullErrorParser } from './errorParsers/NullErrorParser';
+
+export type { JSONApiError, JSONApiErrorItem } from './errorParsers/types';
+
+export { default as NotAllowedError } from './errors/NotAllowedError';
+export { default as EntityNotFoundError } from './errors/EntityNotFoundError';
+export { default as UnprocessableEntityError } from './errors/UnprocessableEntityError';
