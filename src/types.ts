@@ -1,7 +1,8 @@
+export type EntityID = number | string;
 export type EntityType = string;
 
 export interface EntityAttributes {
-	id: number;
+	id: EntityID;
 	[ key: string ]: unknown;
 }
 

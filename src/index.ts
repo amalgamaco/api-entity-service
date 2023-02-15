@@ -6,7 +6,7 @@ export { default as EntityCreator } from './creator/EntityCreator';
 export type {
 	JSONApiResponse, JSONApiData, JSONApiRelationships,
 	JSONApiRelationship, JSONApiRelationshipData,
-	JSONApiAttributes
+	JSONApiAttributes, JSONApiParserOptions
 } from './parsers/JSONApiParser.types';
 
 export type {

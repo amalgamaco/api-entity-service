@@ -95,7 +95,9 @@ const userFunctionalMapper = ( {
 } );
 
 describe( 'JSONApiParser', () => {
-	const createParser = ( { mappers = {} } = {} ) => new JSONApiParser( { mappers } );
+	const createParser = (
+		{ mappers = {}, options } = {}
+	) => new JSONApiParser( { mappers, options } );
 
 	const testParsesIncludedCorrectly = ( { response } ) => {
 		const mappers = {
@@ -157,6 +159,17 @@ describe( 'JSONApiParser', () => {
 				const parsed = parser.parse( response );
 
 				expect( parsed.data.attributes.id ).toEqual( parseInt( id, 10 ) );
+			} );
+
+			describe( 'when the convertIDsToInt option is set to false', () => {
+				it( 'leaves the id as it is', () => {
+					const parser = createParser(
+						{ mappers: { user: userMapper }, options: { convertIDsToInt: false } }
+					);
+					const parsed = parser.parse( response );
+
+					expect( parsed.data.attributes.id ).toEqual( id );
+				} );
 			} );
 
 			it( 'assigns the correct type', () => {
