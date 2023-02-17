@@ -25,13 +25,14 @@ export interface IEntityCreator {
 	create<T>( parsedResponse: ParsedResponse ): ( null | T | T[] )
 }
 
-export interface IErrorHandler {
-	handleError( error: unknown ): unknown
+export interface IErrorParser {
+	parse( error: unknown ): unknown
 }
 
 export type JSONValue =
-    | string
-    | number
-    | boolean
-    | { [ key: string ]: JSONValue }
-    | Array<JSONValue>;
+	| string
+	| number
+	| boolean
+	| null
+	| { [ key: string ]: JSONValue }
+	| Array<JSONValue>;

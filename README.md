@@ -69,7 +69,9 @@ export default class RootStore implements IRootStore {
 __PostsService__
 ```ts
 import { Api } from '@amalgama/http-api-client';
-import { EntityCreator, JSONApiParser, ApiEntityService } from '@amalgama/api-entity-service';
+import {
+	EntityCreator, JSONApiParser, JSONApiErrorParser, ApiEntityService
+} from '@amalgama/api-entity-service';
 
 import RootStore from `stores/RootStore`;
 
@@ -91,13 +93,15 @@ const basePath = 'v1/posts';
 const rootStore = new RootStore();
 
 const parser = new JSONApiParser( { post: POST_MAPPER, user: USER_MAPPER } );
+const errorParser = new JSONApiErrorParser();
 const creator = new EntityCreator( { rootStore } );
 
 const postsService = new ApiEntityService( {
 	api,
 	parser,
 	creator,
-	basePath
+	basePath,
+	errorParser
 })
 
 postsService.fetchAll( { page: 2, page_size: 3, order: 'created_at:desc' } );
@@ -146,7 +150,7 @@ constructor( api, basePath, parser, creator, paths, errorHandler ): ApiEntitySer
 | parser | [IResponseParser](#iresponseparser) | An object in charge of parsing the API responses | yes | - |
 | creator | [IEntityCreator](#ientitycreator) | An object in charge of creating the fetched entities in the correct stores  | yes | - |
 | paths | [ICustomPaths](#icustompaths) | A hash indicating custom paths for the CRUD methods  | no | `{}` |
-| errorHandler | [IErrorHandler](#ierrorhandler) | An object in charge of handling the error responses | no | NullErrorHandler |
+| errorParser | [IErrorParser](#ierrorparser) | An object in charge of parsing the error responses | no | NullErrorParser |
 
 ##### Return
 
@@ -154,6 +158,7 @@ Returns a new instance of the `ApiEntityService` that will:
 - Use the `api` to make the requests to the remote REST API.
 - Use the `parser` to parse the `api` responses before sending them to the `creator`.
 - Use the `creator` to create the entities including in the parsed response in their corresponding entities stores.
+- Use the `errorParser` to parse the `api` errors before throwing them.
 
 #### create
 
@@ -758,6 +763,181 @@ const areEqual = userCity === cityFromStore
 // true
 ```
 
+### JSONApiErrorParser
+
+Parses error responses in JSON Api format.
+
+#### constructor
+
+Creates a new instance of the `JSONApiErrorParser`.
+
+```ts
+constructor(): JSONApiErrorParser
+```
+
+##### Return
+
+Returns a new instance of the `JSONApiErrorParser`.
+
+##### Example
+
+```ts
+import { JSONApiErrorParser, ApiEntityService, ... } from '@amalgama/api-entity-service';
+
+const errorParser = new JSONApiErrorParser();
+
+const service = new ApiEntityService( {
+	...,
+	errorParser
+} );
+```
+
+#### parse
+
+Parses a JSON Api format response error. If the passed error can't be parsed then that same error is returned.
+
+```ts
+parse( error: unkown ): NotAllowedError | EntityNotFoundError | UnprocessableEntityError | unkonwn
+```
+
+##### Parameters
+
+| Name | Type | Description | Required | Default |
+| ---- | ---- | ------ | ------ | ---- |
+| error | `unkown` | The error received from the api. | yes | - |
+
+
+##### Return
+
+Returns the parsed error.
+
+##### Example
+
+```ts
+const errorParser = new JSONApiErrorParser();
+
+// Not found error
+const notFoundErrorResponse = new FailedApiResponseError( status: 404, data: {
+	'errors': [
+		{
+			'title': 'Not Found Error',
+			'code': 'not_found',
+			'detail': "Couldn't find User with 'id'=133",
+			'source': {
+				'pointer': '/User/id'
+			}
+		}
+	]
+} );
+
+const parsedError = errorParser.parse( notFoundErrorResponse );
+console.log( parsedError );
+// EntityNotFoundError: Couldn't find User with 'id'=133
+
+//Unprocessable error
+const unprocessableErrorResponse = new FailedApiResponseError( status: 422, data: {
+	'errors': [
+		{
+			'status': 422,
+			'title': 'Unprocessable entity',
+			'detail': 'Email taken',
+			'code': 'invalid.email_taken',
+			'source': {
+				'pointer': '/email'
+			}
+		},
+		{
+			'status': 422,
+			'title': 'Unprocessable entity',
+			'code': 'invalid.blank',
+			'detail': 'Can\'t be blank',
+			'source': {
+				'pointer': '/content'
+			}
+		},
+		{
+			'status': 422,
+			'title': 'Unprocessable entity',
+			'code': 'invalid.invalid_format',
+			'detail': 'URL format is not valid',
+			'source': {
+				'pointer': '/photo/url'
+			}
+		}
+	]
+} );
+
+const parsedError = errorParser.parse( unprocessableErrorResponse );
+console.log( parsedError );
+// UnprocessableEntityError: There was an error trying to process the entity
+console.log( parsedError.errors );
+// {
+//  	email: {
+//  		code: 'invalid.email_taken',
+//  		detail: 'Email taken'
+//  	},
+//  	content: {
+//  		code: 'invalid.blank',
+//  		detail: 'Can\'t be blank'
+//  	},
+//  	photo: {
+//  		url: {
+//  			code: 'invalid.invalid_format',
+//  			detail: 'URL format is not valid'
+//  		}
+//  	}
+// }
+```
+
+## Errors
+
+### NotAllowedError
+This error is thrown when the client is not allowed to perform an action.
+
+
+#### Properties
+
+| Name | Type | Description |
+| ---- | ---- | ------ |
+| message | `string` | Human readable description of what caused the error. |
+
+### EntityNotFoundError
+This error is thrown when the entity you were trying to access was not found.
+
+#### Properties
+
+| Name | Type | Description |
+| ---- | ---- | ------ |
+| message | `string` | Human readable description of what caused the error. |
+
+### UnprocessableEntityError
+This error is thrown when there was a problem processing changes for one or more entities, commonly due to one or more attributes not being valid.
+
+#### Properties
+
+| Name | Type | Description |
+| ---- | ---- | ------ |
+| errors | [AttributesErrors](#attributeserrors) | A map of the attributes that are not valid. |
+
+##### Example attribute errors
+```ts
+{
+ 	email: {
+ 		code: 'invalid.email_taken',
+ 		detail: 'Email taken'
+ 	},
+ 	content: {
+ 		code: 'invalid.blank',
+ 		detail: 'Can\'t be blank'
+ 	},
+ 	photo: {
+ 		url: {
+ 			code: 'invalid.invalid_format',
+ 			detail: 'URL format is not valid'
+ 		}
+ 	}
+}
+```
 
 ## Types
 
@@ -796,11 +976,11 @@ interface ICustomPaths {
 }
 ```
 
-### IErrorHandler
+### IErrorParser
 
 ```ts
-interface IErrorHandler {
-	handleError( error: unknown ): unknown
+interface IErrorParser {
+	parse( error: unknown ): UnkownError | EntityNotFoundError | UnprocessableEntityError
 }
 ```
 
@@ -1034,4 +1214,29 @@ interface IRootStore {
 interface JSONApiParserOptions {
 	convertIDsToInt: boolean
 }
+```
+
+### AttributeName
+
+```ts
+type AttributeName = string;
+```
+
+### AttributeError
+
+```ts
+type AttributeError = {
+	code: string,
+	detail: string
+};
+```
+### AttributeErrorOrNestedErrors
+
+```ts
+type AttributeErrorOrNestedErrors = AttributeError | Record<AttributeName, AttributeError>;
+```
+
+### AttributesErrors
+```ts
+export type AttributesErrors = Record<AttributeName, AttributeErrorOrNestedErrors>;
 ```

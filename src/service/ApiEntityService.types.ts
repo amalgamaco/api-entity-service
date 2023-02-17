@@ -1,5 +1,5 @@
 import {
-	IEntityCreator, IErrorHandler, IResponseParser, JSONValue
+	IEntityCreator, IErrorParser, IResponseParser, JSONValue
 } from '../types';
 
 export interface ICustomPaths {
@@ -63,7 +63,7 @@ export interface InitParameters {
 	parser: IResponseParser,
 	creator: IEntityCreator,
 	paths?: { [ key: string ]: string },
-	errorHandler?: IErrorHandler
+	errorParser?: IErrorParser
 }
 
 export type RequestWithBodyConfig = {

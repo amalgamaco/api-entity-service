@@ -1,5 +1,5 @@
 import {
-	IEntityCreator, IErrorHandler, IResponseParser, ParsedResponse
+	IEntityCreator, IErrorParser, IResponseParser, ParsedResponse
 } from '../types';
 import {
 	IApi, Attributes, Params, HTTPMethod, InitParameters,
@@ -7,7 +7,7 @@ import {
 	MakeRequestParameters, EntityID, EntityResponse,
 	SingleEntityResponse, MultiEntityResponse, ICustomPaths
 } from './ApiEntityService.types';
-import NullErrorHandler from '../errorHandlers/NullErrorHandler';
+import NullErrorParser from '../errorParsers/NullErrorParser';
 
 export default class ApiEntityService<T> {
 	readonly api: IApi;
@@ -15,17 +15,17 @@ export default class ApiEntityService<T> {
 	readonly parser: IResponseParser;
 	readonly creator: IEntityCreator;
 	readonly paths: ICustomPaths;
-	readonly errorHandler: IErrorHandler;
+	readonly errorParser: IErrorParser;
 
 	constructor( {
-		api, basePath, parser, creator, paths = {}, errorHandler = new NullErrorHandler()
+		api, basePath, parser, creator, paths = {}, errorParser = new NullErrorParser()
 	}: InitParameters ) {
 		this.api = api;
 		this.basePath = basePath;
 		this.parser = parser;
 		this.creator = creator;
 		this.paths = paths;
-		this.errorHandler = errorHandler;
+		this.errorParser = errorParser;
 	}
 
 	create(
@@ -101,8 +101,7 @@ export default class ApiEntityService<T> {
 
 			return this.createEntities( parsedResponse );
 		} catch ( error ) {
-			this.errorHandler.handleError( error );
-			return null;
+			throw this.errorParser.parse( error );
 		}
 	}
 
