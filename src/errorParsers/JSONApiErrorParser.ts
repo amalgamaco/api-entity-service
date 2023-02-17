@@ -50,7 +50,7 @@ export default class JSONApiErrorParser implements IErrorParser {
 	}
 
 	protected unprocessableApiErrorFor( error: JSONApiError ) {
-		return new UnprocessableEntityError( this.errosMapFromApiError( error ) );
+		return new UnprocessableEntityError( this.errorsMapFromApiError( error ) );
 	}
 
 	protected detailForError( error: JSONApiError ) {
@@ -68,7 +68,7 @@ export default class JSONApiErrorParser implements IErrorParser {
 		return ( { code, detail } );
 	}
 
-	protected errosMapFromApiError( error: JSONApiError ): AttributesErrors {
+	protected errorsMapFromApiError( error: JSONApiError ): AttributesErrors {
 		if ( !error.data.errors ) { return {}; }
 
 		return error.data.errors.reduce(
