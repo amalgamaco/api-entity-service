@@ -1,5 +1,5 @@
 import SchemaEntity from './helpers/SchemaEntity';
-import { ParsedEntity } from '../types';
+import { EntityID, ParsedEntity } from '../types';
 import ParsedEntitySet from './helpers/ParsedEntitySet';
 
 export type EntitySerialization = { id: string, [ key: string ]: unknown };
@@ -25,6 +25,6 @@ export interface ParsedItems {
 }
 
 export interface ParsedRelations {
-	related: { [ key: string ]: number | number[] },
+	related: { [ key: string ]: EntityID | EntityID[] },
 	included: ParsedEntitySet
 }

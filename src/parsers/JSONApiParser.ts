@@ -5,16 +5,19 @@ import {
 
 import {
 	InitParameters, JSONApiResponse,
-	AttributesMappers, JSONApiData, JSONApiRelationships, JSONApiRelationshipData
+	AttributesMappers, JSONApiData, JSONApiRelationships, JSONApiRelationshipData,
+	JSONApiParserOptions
 } from './JSONApiParser.types';
 
 import { mapAttributes } from './helpers/mappers';
 
 export default class JSONApiParser implements IResponseParser {
 	private mappers: AttributesMappers;
+	private options: JSONApiParserOptions;
 
-	constructor( { mappers }: InitParameters ) {
+	constructor( { mappers, options = { convertIDsToInt: true } }: InitParameters ) {
 		this.mappers = mappers;
+		this.options = options;
 	}
 
 	parse( { data, included, meta }: JSONApiResponse ): ParsedResponse {
@@ -63,7 +66,7 @@ export default class JSONApiParser implements IResponseParser {
 
 		const attributes: EntityAttributes = {
 			...parsed,
-			id: parseInt( id, 10 )
+			id: this.parseID( id )
 		};
 
 		return { type, attributes };
@@ -81,11 +84,11 @@ export default class JSONApiParser implements IResponseParser {
 				return !Array.isArray( data )
 					? ( {
 						...result,
-						[ `${relationshipName}_id` ]: parseInt( data.id, 10 )
+						[ `${relationshipName}_id` ]: this.parseID( data.id )
 					} ) : ( {
 						...result,
 						[ `${relationshipName}_ids` ]: data.map(
-							( r: JSONApiRelationshipData ) => parseInt( r.id, 10 )
+							( r: JSONApiRelationshipData ) => this.parseID( r.id )
 						)
 					} );
 			}, {} );
@@ -93,5 +96,11 @@ export default class JSONApiParser implements IResponseParser {
 
 	private hasMapperForType( type: string ) {
 		return !!this.mappers[ type ];
+	}
+
+	private parseID( rawID: string ) {
+		return this.options.convertIDsToInt
+			? parseInt( rawID, 10 )
+			: rawID;
 	}
 }

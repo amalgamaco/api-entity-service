@@ -1,5 +1,5 @@
 import {
-	IResponseParser, EntityAttributes, ParsedEntity, ParsedResponse
+	IResponseParser, EntityAttributes, ParsedEntity, ParsedResponse, EntityID
 } from '../types';
 import ParsedEntitySet from './helpers/ParsedEntitySet';
 import SchemaEntity from './helpers/SchemaEntity';
@@ -111,7 +111,7 @@ export default class SchemaParser implements IResponseParser {
 	parseRelatedItems(
 		relationshipName: string, items: JSONData[], schema: SchemaEntity
 	): ParsedRelations {
-		const { ids, included }: { ids: Set<number>, included: ParsedEntitySet} = items
+		const { ids, included }: { ids: Set<EntityID>, included: ParsedEntitySet} = items
 			.reduce(
 				( result, item ) => {
 					const { data, included: itemIncluded } = this.parseItem(
@@ -129,7 +129,7 @@ export default class SchemaParser implements IResponseParser {
 						included: result.included
 					};
 				},
-				{ ids: new Set<number>(), included: new ParsedEntitySet() }
+				{ ids: new Set<EntityID>(), included: new ParsedEntitySet() }
 			);
 
 		return {

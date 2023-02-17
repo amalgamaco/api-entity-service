@@ -272,6 +272,7 @@ The `JSONApiParse` `constructor` receives an hash parameter with the following p
 | Name | Type | Description | Required | Default |
 | ---- | ---- | ------ | ------ | ---- |
 | mappers | [AttributesMappers](#attributesmappers) | An object defining how the entities attributes are going to be mapped for eacth entity `type` that can be returned in the api response. | yes | - |
+| options | [JSONApiParserOptions](#jsonapiparseroptions) | A configuration object for the parser. Options included are: <br /> - `convertIDsToInt`: If all ids should be parsed as integers or should be left as they are (needed for supporting ids that are not numbers) | no | ```{ convertIDsToInt: true }``` |
 
 
 ##### Return
@@ -1024,5 +1025,13 @@ interface IEntityStore<T> {
 ```ts
 interface IRootStore {
 	getStore<T>( type: string ): IEntityStore<T>;
+}
+```
+
+### JSONApiParserOptions
+
+```ts
+interface JSONApiParserOptions {
+	convertIDsToInt: boolean
 }
 ```

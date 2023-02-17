@@ -5,8 +5,13 @@ export interface AttributesMappers {
 	[ key: string ]: AttributesMapper
 }
 
+export interface JSONApiParserOptions {
+	convertIDsToInt: boolean
+}
+
 export interface InitParameters {
 	mappers: AttributesMappers;
+	options?: JSONApiParserOptions;
 }
 
 export interface JSONApiAttributes {
