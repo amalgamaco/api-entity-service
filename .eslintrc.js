@@ -7,7 +7,7 @@ module.exports = {
 	'extends': [
 		'airbnb-base',
 		'plugin:@typescript-eslint/recommended',
-		'plugin:jest/recommended',
+		'plugin:jest/recommended'
 	],
 	'parser': '@typescript-eslint/parser',
 	'plugins': [ '@typescript-eslint', 'jest' ],
@@ -65,7 +65,7 @@ module.exports = {
 			'ignorePackages',
 			{
 				'js': 'never',
-				'ts': 'never',
+				'ts': 'never'
 			}
 		],
 		'import/prefer-default-export': 'off',
