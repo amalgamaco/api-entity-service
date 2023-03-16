@@ -6,6 +6,13 @@ variables:
   CACHE_COMPRESSION_LEVEL: fast
   TRANSFER_METER_FREQUENCY: 5s
 
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+
 cache: &global_cache
   - key:
       files:
@@ -73,24 +80,22 @@ run_unit_tests:
 
 upload_to_sonar:
   stage: sonar
-  image:
-    name: sonarsource/sonar-scanner-cli:latest
-    entrypoint: [""]
-  before_script: []
+  image: sonarsource/sonar-scanner-cli:latest
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
     GIT_DEPTH: "0"
   cache:
-    key: "${CI_JOB_NAME}"
-    paths:
-      - .sonar/cache
+    - key: "${CI_JOB_NAME}"
+      paths:
+        - .sonar/cache
   script:
     - sed -i.bk 's/SF:.*\/api-entity-service\/\(.*\)/SF:\1/' reports/coverage/lcov.info
-    - sonar-scanner
+    - sonar-scanner -Dsonar.qualitygate.wait=true
   allow_failure: true
   tags:
     - docker
-  only:
-    - main
-  dependencies:
-    - run_unit_tests
+  needs:
+    - job: run_unit_tests
+      artifacts: true
+  rules:
+    - if: $CI_COMMIT_REF_NAME == 'main' || $CI_PIPELINE_SOURCE == 'merge_request_event'
