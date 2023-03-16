@@ -26,14 +26,13 @@ export type {
 	IApi, ApiRequestConfig, ApiResponse,
 	RequestParameters, RequestWithBodyConfig, HTTPMethod,
 	Attributes, SerializableParam, Params, Headers,
-	EntityResponse, SingleEntityResponse, MultiEntityResponse,
-	EntityID
+	EntityResponse, SingleEntityResponse, MultiEntityResponse
 } from './service/ApiEntityService.types';
 
 export type {
 	IErrorParser, IEntityCreator, IResponseParser,
 	JSONValue, ParsedEntity, ParsedResponse,
-	EntityAttributes
+	EntityAttributes, EntityID
 } from './types';
 
 export { default as JSONApiErrorParser } from './errorParsers/JSONApiErrorParser';

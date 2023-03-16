@@ -74,7 +74,7 @@ export type RequestParameters = {
 	method: HTTPMethod,
 	url: string,
 	attributes?: Attributes,
-	params: Params,
+	params?: Params,
 	config: RequestWithBodyConfig
 }
 
@@ -82,8 +82,6 @@ export type MakeRequestParameters = {
 	method: HTTPMethod,
 	url: string,
 	attributes?: Attributes,
-	params: Params,
+	params?: Params,
 	includesFiles?: boolean
 }
-
-export type EntityID = number | string;

@@ -1,10 +1,11 @@
 import {
-	IEntityCreator, IErrorParser, IResponseParser, ParsedResponse
+	IEntityCreator, IErrorParser, IResponseParser, ParsedResponse,
+	EntityID
 } from '../types';
 import {
 	IApi, Attributes, Params, HTTPMethod, InitParameters,
 	RequestWithBodyConfig, RequestParameters,
-	MakeRequestParameters, EntityID, EntityResponse,
+	MakeRequestParameters, EntityResponse,
 	SingleEntityResponse, MultiEntityResponse, ICustomPaths
 } from './ApiEntityService.types';
 import NullErrorParser from '../errorParsers/NullErrorParser';
