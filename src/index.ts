@@ -24,9 +24,13 @@ export type {
 
 export type {
 	IApi, ApiRequestConfig, ApiResponse,
-	RequestParameters, RequestWithBodyConfig, HTTPMethod,
+	RequestParameters, RequestWithBodyConfig,
 	Attributes, SerializableParam, Params, Headers,
 	EntityResponse, SingleEntityResponse, MultiEntityResponse
+} from './service/ApiEntityService.types';
+
+export {
+	HTTPMethod
 } from './service/ApiEntityService.types';
 
 export type {
