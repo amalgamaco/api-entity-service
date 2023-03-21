@@ -24,12 +24,12 @@ constructor( { api, basePath, parser, creator, errorParser, paths } ): ApiEntity
 
 | Name | Type | Description | Required | Default |
 | ---- | ---- | ------ | ------ | ---- |
-| api | [IApi](../types#iapi) | The api client to use to connect with the remote API | yes | - |
+| api | [IApi](../types.md#iapi) | The api client to use to connect with the remote API | yes | - |
 | basePath | `string` | The base path for the resource without the leading and ending slash. | yes | - |
-| parser | [IResponseParser](../types#iresponseparser) | An object in charge of parsing the API responses | yes | - |
-| creator | [IEntityCreator](../types#ientitycreator) | An object in charge of creating the fetched entities in the correct stores  | yes | - |
-| errorParser | [IErrorParser](../types#ierrorparser) | An object in charge of parsing the error responses | no |`NullErrorParser` |
-| paths | [ICustomPaths](../types#icustompaths) | A hash indicating custom paths for the CRUD methods  | no | `{}` |
+| parser | [IResponseParser](../types.md#iresponseparser) | An object in charge of parsing the API responses | yes | - |
+| creator | [IEntityCreator](../types.md#ientitycreator) | An object in charge of creating the fetched entities in the correct stores  | yes | - |
+| errorParser | [IErrorParser](../types.md#ierrorparser) | An object in charge of parsing the error responses | no |`NullErrorParser` |
+| paths | [ICustomPaths](../types.md#icustompaths) | A hash indicating custom paths for the CRUD methods  | no | `{}` |
 
 #### Return
 
@@ -51,13 +51,13 @@ create( attributes, params, config ): Promise<SingleEntityResponse<T>>
 
 | Name | Type | Description | Required | Default |
 | ---- | ---- | ------ | ------ | ---- |
-| attributes | [Attributes](../types#attributes) | The attributes for the new entity to create | yes | - |
-| params | [Params](../types#params) | Additional query parameters to send with the request to the remote API | no | `{}` |
-| config | [RequestWithBodyConfig](../types#requestwithbodyconfig) | Additional configuration for the request to the remote API | no | `{}` |
+| attributes | [Attributes](../types.md#attributes) | The attributes for the new entity to create | yes | - |
+| params | [Params](../types.md#params) | Additional query parameters to send with the request to the remote API | no | `{}` |
+| config | [RequestWithBodyConfig](../types.md#requestwithbodyconfig) | Additional configuration for the request to the remote API | no | `{}` |
 
 #### Return
 
-Returns a promise that resolves to a [response object](../types#singleentityresponse) containing the created entity if the request to the API is successful.
+Returns a promise that resolves to a [response object](../types.md#singleentityresponse) containing the created entity if the request to the API is successful.
 
 ### update
 
@@ -71,14 +71,14 @@ update( id, attributes, params, config ): Promise<SingleEntityResponse<T>>
 
 | Name | Type | Description | Required | Default |
 | ---- | ---- | ------ | ------ | ---- |
-| id | [EntityID](../types#entityid) | The ID of the entity to update | yes | - |
-| attributes | [Attributes](../types#attributes) | The attributes to update | yes | - |
-| params | [Params](../types#params) | Additional query parameters to send with the request to the remote API | no | `{}` |
-| config | [RequestWithBodyConfig](../types#requestwithbodyconfig) | Additional configuration for the request to the remote API | no | `{}` |
+| id | [EntityID](../types.md#entityid) | The ID of the entity to update | yes | - |
+| attributes | [Attributes](../types.md#attributes) | The attributes to update | yes | - |
+| params | [Params](../types.md#params) | Additional query parameters to send with the request to the remote API | no | `{}` |
+| config | [RequestWithBodyConfig](../types.md#requestwithbodyconfig) | Additional configuration for the request to the remote API | no | `{}` |
 
 #### Return
 
-Returns a promise that resolves to a [response object](../types#singleentityresponse) containing the update entity if the request to the API is successful.
+Returns a promise that resolves to a [response object](../types.md#singleentityresponse) containing the update entity if the request to the API is successful.
 
 ### fetch
 
@@ -92,12 +92,12 @@ fetch( id, params ): Promise<SingleEntityResponse<T>>
 
 | Name | Type | Description | Required | Default |
 | ---- | ---- | ------ | ------ | ---- |
-| id | [EntityID](../types#entity-id) | The ID of the entity to fetch | yes | - |
-| params | [Params](../types#params) | Additional query parameters to send with the request to the remote API | no | `{}` |
+| id | [EntityID](../types.md#entity-id) | The ID of the entity to fetch | yes | - |
+| params | [Params](../types.md#params) | Additional query parameters to send with the request to the remote API | no | `{}` |
 
 #### Return
 
-Returns a promise that resolves to a [response object](../types#singleentityresponse) containing the fetched entity if the request to the API is successful.
+Returns a promise that resolves to a [response object](../types.md#singleentityresponse) containing the fetched entity if the request to the API is successful.
 
 ### fetchAll
 
@@ -111,11 +111,11 @@ fetchAll( params ): Promise<MultiEntityResponse<T>>
 
 | Name | Type | Description | Required | Default |
 | ---- | ---- | ------ | ------ | ---- |
-| params | [Params](../types#params) | Additional query parameters to send with the request to the remote API | no | `{}` |
+| params | [Params](../types.md#params) | Additional query parameters to send with the request to the remote API | no | `{}` |
 
 #### Return
 
-Returns a promise that resolves to a [response object](../types#multientityresponse) containing the fetched entities if the request to the API is successful.
+Returns a promise that resolves to a [response object](../types.md#multientityresponse) containing the fetched entities if the request to the API is successful.
 
 ### delete
 
@@ -129,8 +129,8 @@ delete( id, params ): Promise<SingleEntityResponse<T>>
 
 | Name | Type | Description | Required | Default |
 | ---- | ---- | ------ | ------ | ---- |
-| id | [EntityID](../types#entityid) | The ID of the entity to delete | yes | - |
-| params | [Params](../types#params)  | Additional query parameters to send with the request to the remote API | no | `{}` |
+| id | [EntityID](../types.md#entityid) | The ID of the entity to delete | yes | - |
+| params | [Params](../types.md#params)  | Additional query parameters to send with the request to the remote API | no | `{}` |
 
 #### Return
 
@@ -147,12 +147,12 @@ request( { method, url, attributes, params, config } ): Promise<EntityResponse<T
 
 | Name | Type | Description | Required | Default |
 | ---- | ---- | ------ | ------ | ---- |
-| method | [HTTPMethod](../types#httpmethod) | The HTTP method to use in the request. | no | `HTTPMethod.GET` |
+| method | [HTTPMethod](../types.md#httpmethod) | The HTTP method to use in the request. | no | `HTTPMethod.GET` |
 | url | `string` | The api path to call. Note that this method does not use the base path to make the request so if you want a URL relative to the base path you have to do it yourself and pass it here.  | no | `HTTPMethod.GET` |
-| attributes | [Attributes](../types#attributes) | Attributes to send as the body of the request. | no | `null` |
-| params | [Params](../types#params) | Query parameters to send with the request to the remote API. | no | `{}` |
-| config | [RequestWithBodyConfig](../types#requestwithbodyconfig) | Additional configuration for the request to the remote API. | no | `{}` |
+| attributes | [Attributes](../types.md#attributes) | Attributes to send as the body of the request. | no | `null` |
+| params | [Params](../types.md#params) | Query parameters to send with the request to the remote API. | no | `{}` |
+| config | [RequestWithBodyConfig](../types.md#requestwithbodyconfig) | Additional configuration for the request to the remote API. | no | `{}` |
 
 #### Return
 
-Returns a promise that resolves to a [response object](../types#multientityresponse) containing the fetched entities if the request to the API is successful.
+Returns a promise that resolves to a [response object](../types.md#multientityresponse) containing the fetched entities if the request to the API is successful.

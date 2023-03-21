@@ -16,7 +16,7 @@ The `EntityCreator` `constructor` receives an hash parameter with the following 
 
 | Name | Type | Description | Required | Default |
 | ---- | ---- | ------ | ------ | ---- |
-| rootStore | [IRootStpre](#irootstore) | The root store containing the entity stores where the entities are going to be created. | yes | - |
+| rootStore | [IRootStpre](../types.md#irootstore) | The root store containing the entity stores where the entities are going to be created. | yes | - |
 
 ##### Return
 
@@ -43,7 +43,7 @@ create<T>( parsedResponse ): ( T | null | T[] )
 
 | Name | Type | Description | Required | Default |
 | ---- | ---- | ------ | ------ | ---- |
-| parsedResponse | [ParsedResponse](#parsedresponse) | The parsed response returned by the parser. | yes | - |
+| parsedResponse | [ParsedResponse](../types.md#parsedresponse) | The parsed response returned by the parser. | yes | - |
 
 ##### Return
 
