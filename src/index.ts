@@ -46,4 +46,8 @@ export type { JSONApiError, JSONApiErrorItem } from './errorParsers/types';
 
 export { default as NotAllowedError } from './errors/NotAllowedError';
 export { default as EntityNotFoundError } from './errors/EntityNotFoundError';
-export { default as UnprocessableEntityError } from './errors/UnprocessableEntityError';
+export {
+	default as UnprocessableEntityError,
+	AttributeError, AttributesErrors, AttributeName,
+	AttributeErrorOrNestedErrors
+} from './errors/UnprocessableEntityError';

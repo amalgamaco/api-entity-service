@@ -4,7 +4,7 @@ export type AttributeError = {
 	detail: string
 };
 
-type AttributeErrorOrNestedErrors = AttributeError | Record<AttributeName, AttributeError>;
+export type AttributeErrorOrNestedErrors = AttributeError | Record<AttributeName, AttributeError>;
 
 export type AttributesErrors = Record<AttributeName, AttributeErrorOrNestedErrors>;
 
