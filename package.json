@@ -1,5 +1,5 @@
 {
-  "name": "@amalgama/api-entity-service",
+  "name": "@amalgamaco/api-entity-service",
   "version": "1.3.2",
   "description": "A set of services for handling the communication with a REST API and the creation of the local entities and their relations based on the API responses.",
   "main": "dist/index.js",
@@ -18,16 +18,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@git.amalgama.co:amalgama/packages/npm/api-entity-service.git"
+    "url": "git@github.com:amalgamaco/api-entity-service.git"
   },
   "author": "Mauro E. Bender <mauro@amalgama.co>",
   "license": "MIT",
   "bugs": {
-    "url": "https://git.amalgama.co/amalgama/packages/npm/api-entity-service/-/issues"
+    "url": "https://github.com/amalgamaco/api-entity-service/issues"
   },
-  "homepage": "https://git.amalgama.co/amalgama/packages/npm/api-entity-service",
+  "homepage": "https://github.com/amalgamaco/api-entity-service",
   "publishConfig": {
-    "@amalgama:registry": " https://git.amalgama.co/api/v4/projects/982/packages/npm/"
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
   },
   "keywords": [
     "api",
@@ -85,14 +86,13 @@
       "requireCleanWorkingDir": false,
       "requireUpstream": true,
       "commitMessage": "Release v${version}",
-      "changelog": "npx auto-changelog --stdout --commit-limit false --unreleased --issue-url https://git.amalgama.co/amalgama/packages/npm/api-entity-service/-/issues/{id} --merge-url https://git.amalgama.co/amalgama/packages/npm/api-entity-service/-/merge_requests/{id} --commit-url https://git.amalgama.co/amalgama/packages/npm/api-entity-service/-/commit/{id} --template https://raw.githubusercontent.com/release-it/release-it/master/templates/changelog-compact.hbs"
+      "changelog": "npx auto-changelog --stdout --commit-limit false --unreleased --issue-url https://github.com/amalgamaco/api-entity-service/issues/{id} --merge-url https://github.com/amalgamaco/api-entity-service/pull/{id} --commit-url https://github.com/amalgamaco/api-entity-service/commit/{id} --template https://raw.githubusercontent.com/release-it/release-it/master/templates/changelog-compact.hbs"
     },
     "hooks": {
       "after:bump": "npx auto-changelog -p"
     },
-    "gitlab": {
+    "github": {
       "release": true,
-      "publish": true,
       "releaseName": "Release v${version}"
     },
     "npm": {
