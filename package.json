@@ -1,6 +1,6 @@
 {
   "name": "@amalgamaco/api-entity-service",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "A set of services for handling the communication with a REST API and the creation of the local entities and their relations based on the API responses.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
