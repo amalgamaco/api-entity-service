@@ -12,7 +12,11 @@ A set of services to provide an easy way to interact with a REST API resource an
 Run the following command to add the `ApiEntityService` library to your project:
 
 ```bash
-yarn add @amalgama/api-entity-service
+yarn add @amalgamaco/api-entity-service
+```
+or
+```bash
+npm install @amalgamaco/api-entity-service
 ```
 
 ### Usage
